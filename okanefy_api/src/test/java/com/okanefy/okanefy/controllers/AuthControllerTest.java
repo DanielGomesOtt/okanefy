@@ -2,9 +2,8 @@ package com.okanefy.okanefy.controllers;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.okanefy.okanefy.dto.Auth.CreatedUserDTO;
-import com.okanefy.okanefy.dto.Auth.LoginUserDTO;
-import com.okanefy.okanefy.dto.Auth.RegisterUserDTO;
+import com.okanefy.okanefy.dto.auth.CreatedUserDTO;
+import com.okanefy.okanefy.dto.auth.RegisterUserDTO;
 import com.okanefy.okanefy.infra.security.SecurityConfiguration;
 import com.okanefy.okanefy.infra.security.TokenService;
 import com.okanefy.okanefy.repositories.UsersRepository;

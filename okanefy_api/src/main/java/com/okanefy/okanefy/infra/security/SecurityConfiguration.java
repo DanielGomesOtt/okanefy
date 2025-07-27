@@ -29,6 +29,10 @@ public class SecurityConfiguration {
                     request.requestMatchers("/signIn").permitAll();
                     request.requestMatchers("/").permitAll();
                     request.requestMatchers("/signUp").permitAll();
+                    request.requestMatchers("/forgotPassword").permitAll();
+                    request.requestMatchers("/updatePassword").permitAll();
+                    request.requestMatchers("/confirmRecoveryCode").permitAll();
+                    request.requestMatchers("/email").permitAll();
                     request.requestMatchers("/v3/api-docs/**", "swagger-ui.html", "/swagger-ui/**").permitAll();
                     request.anyRequest().authenticated();
                 })

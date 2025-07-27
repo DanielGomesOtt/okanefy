@@ -44,4 +44,12 @@ public class RestErrorHandler {
         RestErrorMessage error = new RestErrorMessage(ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<RestErrorMessage> handleUsernameNotFoundException (
+            UsernameNotFoundException ex
+    ) {
+        RestErrorMessage error = new RestErrorMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
 }

@@ -1,8 +1,7 @@
-package com.okanefy.okanefy.dto.Auth;
+package com.okanefy.okanefy.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 public record LoginUserDTO(
         @NotBlank(message = "O e-mail não pode ser vazio.")

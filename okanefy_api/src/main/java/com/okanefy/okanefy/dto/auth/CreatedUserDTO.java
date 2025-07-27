@@ -1,4 +1,4 @@
-package com.okanefy.okanefy.dto.Auth;
+package com.okanefy.okanefy.dto.auth;
 
 public record CreatedUserDTO(
         Long id,

@@ -1,20 +1,17 @@
 package com.okanefy.okanefy.controllers;
 
-import com.okanefy.okanefy.dto.Auth.CreatedUserDTO;
-import com.okanefy.okanefy.dto.Auth.LoginUserDTO;
-import com.okanefy.okanefy.dto.Auth.RegisterUserDTO;
+import com.okanefy.okanefy.dto.auth.*;
 import com.okanefy.okanefy.infra.security.TokenService;
 import com.okanefy.okanefy.models.Users;
 import com.okanefy.okanefy.services.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AuthController {
@@ -41,6 +38,24 @@ public class AuthController {
         Users authenticatedUser = (Users) authentication.getPrincipal();
         String authenticationToken = tokenService.signToken(authenticatedUser);
         return ResponseEntity.ok(new CreatedUserDTO(authenticatedUser.getId(), authenticatedUser.getName(), authenticatedUser.getEmail(), authenticationToken));
+    }
+
+    @PostMapping("/forgotPassword")
+    public ResponseEntity<ForgotPasswordDTO> forgotPassword(@RequestBody @Valid ForgotPasswordDTO data) {
+        service.createRecoveryCode(data);
+        return ResponseEntity.status(201).body(data);
+    }
+
+    @GetMapping("/confirmRecoveryCode")
+    public ResponseEntity<?> confirmRecoveryCode(@RequestParam(required = true) String email, @RequestParam(required = true) String code) {
+        HttpStatusCode result = service.confirmRecoveryCode(email, code);
+        return ResponseEntity.status(result).body(email);
+    }
+
+    @PutMapping("/updatePassword")
+    public ResponseEntity<?> updatePassword(@RequestBody @Valid UpdatePasswordDTO data) {
+        service.updatePassword(data);
+        return ResponseEntity.status(204).build();
     }
 
 }

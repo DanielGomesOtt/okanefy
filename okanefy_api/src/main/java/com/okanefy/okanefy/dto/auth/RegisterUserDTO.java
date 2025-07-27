@@ -1,4 +1,4 @@
-package com.okanefy.okanefy.dto.Auth;
+package com.okanefy.okanefy.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

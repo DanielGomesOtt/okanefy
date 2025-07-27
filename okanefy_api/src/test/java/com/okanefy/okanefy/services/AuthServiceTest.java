@@ -1,7 +1,7 @@
 package com.okanefy.okanefy.services;
 
-import com.okanefy.okanefy.dto.Auth.CreatedUserDTO;
-import com.okanefy.okanefy.dto.Auth.RegisterUserDTO;
+import com.okanefy.okanefy.dto.auth.CreatedUserDTO;
+import com.okanefy.okanefy.dto.auth.RegisterUserDTO;
 import com.okanefy.okanefy.exceptions.UserAlreadyExistsException;
 import com.okanefy.okanefy.infra.security.TokenService;
 import com.okanefy.okanefy.models.Users;
