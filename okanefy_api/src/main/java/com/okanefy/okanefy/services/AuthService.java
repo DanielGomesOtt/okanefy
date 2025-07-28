@@ -12,7 +12,6 @@ import com.okanefy.okanefy.models.Users;
 import com.okanefy.okanefy.repositories.RecoveryCodeRepository;
 import com.okanefy.okanefy.repositories.UsersRepository;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,7 +20,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
