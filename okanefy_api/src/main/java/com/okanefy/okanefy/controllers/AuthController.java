@@ -5,6 +5,7 @@ import com.okanefy.okanefy.infra.security.TokenService;
 import com.okanefy.okanefy.models.Users;
 import com.okanefy.okanefy.services.AuthService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +48,7 @@ public class AuthController {
     }
 
     @GetMapping("/confirmRecoveryCode")
-    public ResponseEntity<?> confirmRecoveryCode(@RequestParam(required = true) String email, @RequestParam(required = true) String code) {
+    public ResponseEntity<?> confirmRecoveryCode(@RequestParam(required = true) String email, @RequestParam(required = true) @NotBlank String code) {
         HttpStatusCode result = service.confirmRecoveryCode(email, code);
         return ResponseEntity.status(result).body(email);
     }
