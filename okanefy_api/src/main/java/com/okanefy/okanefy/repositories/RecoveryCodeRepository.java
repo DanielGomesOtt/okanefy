@@ -4,9 +4,10 @@ import com.okanefy.okanefy.models.RecoveryCode;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
+import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
+@Repository
 public interface RecoveryCodeRepository extends JpaRepository<RecoveryCode, Long> {
 
     @Query(value= "SELECT * FROM recovery_code WHERE email = :email AND code = :code AND expiration_date >= now()", nativeQuery = true)
