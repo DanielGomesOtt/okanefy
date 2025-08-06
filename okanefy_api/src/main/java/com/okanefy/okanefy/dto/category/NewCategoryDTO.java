@@ -13,4 +13,10 @@ public record NewCategoryDTO(
         @NotNull(message = "Informe o id do usuário que irá criar essa categoria.")
         Long user_id
 ) {
+
+        public NewCategoryDTO(String name, String type, Long user_id) {
+                this.name = name;
+                this.type = type;
+                this.user_id = user_id;
+        }
 }

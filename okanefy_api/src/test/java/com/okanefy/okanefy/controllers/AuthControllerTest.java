@@ -1,36 +1,31 @@
 package com.okanefy.okanefy.controllers;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.okanefy.okanefy.dto.auth.CreatedUserDTO;
 import com.okanefy.okanefy.dto.auth.ForgotPasswordDTO;
 import com.okanefy.okanefy.dto.auth.RegisterUserDTO;
 import com.okanefy.okanefy.dto.auth.UpdatePasswordDTO;
-import com.okanefy.okanefy.infra.exceptions.RestErrorMessage;
-import com.okanefy.okanefy.infra.security.SecurityConfiguration;
 import com.okanefy.okanefy.infra.security.TokenService;
 import com.okanefy.okanefy.repositories.UsersRepository;
 import com.okanefy.okanefy.services.AuthService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AuthController.class)
-@Import(SecurityConfiguration.class)
+@AutoConfigureMockMvc(addFilters = false)
 class AuthControllerTest {
 
     @Autowired
