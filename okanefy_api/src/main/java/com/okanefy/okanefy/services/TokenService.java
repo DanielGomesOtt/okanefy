@@ -1,4 +1,4 @@
-package com.okanefy.okanefy.infra.security;
+package com.okanefy.okanefy.services;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

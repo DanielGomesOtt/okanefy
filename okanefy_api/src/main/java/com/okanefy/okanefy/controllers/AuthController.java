@@ -1,7 +1,7 @@
 package com.okanefy.okanefy.controllers;
 
 import com.okanefy.okanefy.dto.auth.*;
-import com.okanefy.okanefy.infra.security.TokenService;
+import com.okanefy.okanefy.services.TokenService;
 import com.okanefy.okanefy.models.Users;
 import com.okanefy.okanefy.services.AuthService;
 import jakarta.validation.Valid;

@@ -1,13 +1,12 @@
 package com.okanefy.okanefy.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.okanefy.okanefy.dto.category.CategoriesListDTO;
 import com.okanefy.okanefy.dto.category.CreatedCategoryDTO;
 import com.okanefy.okanefy.dto.category.NewCategoryDTO;
 import com.okanefy.okanefy.dto.category.UpdateCategoryDTO;
 import com.okanefy.okanefy.enums.CategoriesTypes;
-import com.okanefy.okanefy.infra.security.TokenService;
+import com.okanefy.okanefy.services.TokenService;
 import com.okanefy.okanefy.models.Category;
 import com.okanefy.okanefy.models.Users;
 import com.okanefy.okanefy.repositories.CategoryRepository;

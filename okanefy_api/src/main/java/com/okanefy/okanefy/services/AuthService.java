@@ -6,7 +6,6 @@ import com.okanefy.okanefy.dto.auth.RegisterUserDTO;
 import com.okanefy.okanefy.dto.auth.UpdatePasswordDTO;
 import com.okanefy.okanefy.dto.email.EmailDTO;
 import com.okanefy.okanefy.exceptions.UserAlreadyExistsException;
-import com.okanefy.okanefy.infra.security.TokenService;
 import com.okanefy.okanefy.models.RecoveryCode;
 import com.okanefy.okanefy.models.Users;
 import com.okanefy.okanefy.repositories.RecoveryCodeRepository;

@@ -6,7 +6,7 @@ import com.okanefy.okanefy.dto.auth.CreatedUserDTO;
 import com.okanefy.okanefy.dto.auth.ForgotPasswordDTO;
 import com.okanefy.okanefy.dto.auth.RegisterUserDTO;
 import com.okanefy.okanefy.dto.auth.UpdatePasswordDTO;
-import com.okanefy.okanefy.infra.security.TokenService;
+import com.okanefy.okanefy.services.TokenService;
 import com.okanefy.okanefy.repositories.UsersRepository;
 import com.okanefy.okanefy.services.AuthService;
 import org.junit.jupiter.api.DisplayName;
