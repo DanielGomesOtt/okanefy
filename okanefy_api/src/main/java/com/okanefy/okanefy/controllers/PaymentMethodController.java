@@ -19,14 +19,12 @@ public class PaymentMethodController {
 
     @GetMapping
     public ResponseEntity<List<PaymentMethodDTO>> findAll(@RequestParam Long userId) {
-        List<PaymentMethodDTO> paymentMethods = service.findAll(userId);
-        return ResponseEntity.ok(paymentMethods);
+        return ResponseEntity.ok(service.findAll(userId));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PaymentMethodDTO> findById(@PathVariable Long id) {
-        PaymentMethodDTO paymentMethod = service.findById(id);
-        return ResponseEntity.ok(paymentMethod);
+        return ResponseEntity.ok(service.findById(id));
     }
 
     @DeleteMapping("/{id}")
@@ -37,13 +35,11 @@ public class PaymentMethodController {
 
     @PostMapping
     public ResponseEntity<PaymentMethodDTO> save(@RequestBody @Valid CreatePaymentMethodDTO data) {
-        PaymentMethodDTO createdPaymentMethod = service.save(data);
-        return ResponseEntity.status(201).body(createdPaymentMethod);
+        return ResponseEntity.status(201).body(service.save(data));
     }
 
     @PutMapping
     public ResponseEntity<PaymentMethodDTO> update(@RequestBody PaymentMethodDTO data) {
-        PaymentMethodDTO updatedPaymentMethod = service.update(data);
-        return ResponseEntity.ok(updatedPaymentMethod);
+        return ResponseEntity.ok(service.update(data));
     }
 }

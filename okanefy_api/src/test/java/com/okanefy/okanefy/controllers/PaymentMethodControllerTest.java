@@ -53,7 +53,7 @@ class PaymentMethodControllerTest {
     @DisplayName("Should return a list of payment methods")
     void shouldReturnListPaymentMethod() throws Exception {
         Users user = new Users(1L, "user", "user@email.com", "123456789", 1);
-        PaymentMethod paymentMethod = new PaymentMethod(1L, "method1", false, 1, user);
+        PaymentMethod paymentMethod = new PaymentMethod(1L, "method1", false, 1, user, List.of());
         List<PaymentMethodDTO> paymentMethodsList = List.of(new PaymentMethodDTO(paymentMethod));
 
         when(service.findAll(1L)).thenReturn(paymentMethodsList);
@@ -82,7 +82,7 @@ class PaymentMethodControllerTest {
     @DisplayName("Should return a payment method")
     void shouldReturnPaymentMethod() throws Exception {
         Users user = new Users(1L, "user", "user@email.com", "123456789", 1);
-        PaymentMethod paymentMethod = new PaymentMethod(1L, "method1", false, 1, user);
+        PaymentMethod paymentMethod = new PaymentMethod(1L, "method1", false, 1, user, List.of());
         PaymentMethodDTO paymentMethodFormatted = new PaymentMethodDTO(paymentMethod);
 
         when(service.findById(1L)).thenReturn(paymentMethodFormatted);
@@ -118,7 +118,7 @@ class PaymentMethodControllerTest {
     @DisplayName("Should create a payment method")
     void shouldCreatePaymentMethod() throws Exception {
         Users user = new Users(1L, "user", "user@email.com", "123456789", 1);
-        PaymentMethod paymentMethod = new PaymentMethod(1L, "method1", false, 1, user);
+        PaymentMethod paymentMethod = new PaymentMethod(1L, "method1", false, 1, user, List.of());
         PaymentMethodDTO createdPaymentMethod = new PaymentMethodDTO(paymentMethod);
         CreatePaymentMethodDTO data = new CreatePaymentMethodDTO("method1", false, 1L);
         String requestBody = objectMapper.writeValueAsString(data);

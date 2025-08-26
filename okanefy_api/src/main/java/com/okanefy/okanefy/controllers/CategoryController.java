@@ -21,8 +21,7 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<CreatedCategoryDTO> save(@RequestBody @Valid NewCategoryDTO category) {
-        CreatedCategoryDTO createdCategory= service.save(category);
-        return ResponseEntity.status(201).body(createdCategory);
+        return ResponseEntity.status(201).body(service.save(category));
     }
 
     @DeleteMapping("/{id}")
@@ -33,13 +32,13 @@ public class CategoryController {
 
     @PutMapping
     public ResponseEntity<CreatedCategoryDTO> update(@RequestBody @Valid UpdateCategoryDTO data) {
-        CreatedCategoryDTO updatedCategory = service.update(data);
-        return ResponseEntity.ok(updatedCategory);
+        return ResponseEntity.ok(service.update(data));
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<CategoriesListDTO>> findAll(@PathVariable Long userId, @RequestParam(required = false) String name, @RequestParam(required = false) String type) {
-        List<CategoriesListDTO> categories = service.findAll(userId, name, type);
-        return ResponseEntity.ok(categories);
+    public ResponseEntity<List<CategoriesListDTO>> findAll(@PathVariable Long userId,
+                                                           @RequestParam(required = false) String name,
+                                                           @RequestParam(required = false) String type) {
+        return ResponseEntity.ok(service.findAll(userId, name, type));
     }
 }

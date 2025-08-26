@@ -37,7 +37,7 @@ class PaymentMethodServiceTest {
     @DisplayName("Should return a payment methods list")
     void shouldReturnPaymentMethodList() {
         Users user = new Users(1L, "user", "user@email.com", "123456789", 1);
-        List<PaymentMethod> paymentMethods = List.of(new PaymentMethod(1L, "method1", false, 1, user));
+        List<PaymentMethod> paymentMethods = List.of(new PaymentMethod(1L, "method1", false, 1, user, List.of()));
 
         when(repository.findAllByUserIdAndStatus(1L, 1)).thenReturn(Optional.of(paymentMethods));
 
@@ -68,7 +68,7 @@ class PaymentMethodServiceTest {
     @DisplayName("Should return a payment method by id")
     void shouldReturnPaymentMethodById() {
         Users user = new Users(1L, "user", "user@email.com", "123456789", 1);
-        PaymentMethod paymentMethod = new PaymentMethod(1L, "method1", false, 1, user);
+        PaymentMethod paymentMethod = new PaymentMethod(1L, "method1", false, 1, user, List.of());
 
         when(repository.findByIdAndStatus(1L, 1)).thenReturn(Optional.of(paymentMethod));
 
@@ -98,7 +98,7 @@ class PaymentMethodServiceTest {
     @DisplayName("Should delete a payment method")
     void shouldDeletePaymentMethod() {
         Users user = new Users(1L, "user", "user@email.com", "123456789", 1);
-        PaymentMethod paymentMethod = new PaymentMethod(1L, "method1", false, 1, user);
+        PaymentMethod paymentMethod = new PaymentMethod(1L, "method1", false, 1, user, List.of());
 
         when(repository.findById(1L)).thenReturn(Optional.of(paymentMethod));
 
@@ -113,7 +113,7 @@ class PaymentMethodServiceTest {
     void shouldCreatePaymentMethod() {
         CreatePaymentMethodDTO data = new CreatePaymentMethodDTO("method1", false, 1L);
         Users user = new Users(1L, "user", "user@email.com", "123456789", 1);
-        PaymentMethod paymentMethod = new PaymentMethod(1L, "method1", false, 1, user);
+        PaymentMethod paymentMethod = new PaymentMethod(1L, "method1", false, 1, user, List.of());
 
         when(usersRepository.findById(1L)).thenReturn(Optional.of(user));
         when(repository.save(any(PaymentMethod.class))).thenReturn(paymentMethod);
@@ -132,7 +132,7 @@ class PaymentMethodServiceTest {
     @DisplayName("Should update a payment method")
     void shouldUpdatePaymentMethod() {
         Users user = new Users(1L, "user", "user@email.com", "123456789", 1);
-        PaymentMethod paymentMethod = new PaymentMethod(1L, "method1", false, 1, user);
+        PaymentMethod paymentMethod = new PaymentMethod(1L, "method1", false, 1, user, List.of());
         PaymentMethodDTO data = new PaymentMethodDTO(1L, "method1 updated", false);
 
         when(repository.findById(1L)).thenReturn(Optional.of(paymentMethod));

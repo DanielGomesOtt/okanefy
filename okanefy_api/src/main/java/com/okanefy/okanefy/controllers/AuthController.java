@@ -28,17 +28,18 @@ public class AuthController {
 
     @PostMapping("/signUp")
     public ResponseEntity<CreatedUserDTO> signUp (@RequestBody @Valid RegisterUserDTO user) {
-        CreatedUserDTO createdUser = service.save(user);
-        return ResponseEntity.status(201).body(createdUser);
+        return ResponseEntity.status(201).body(service.save(user));
     }
 
     @PostMapping("/signIn")
     public ResponseEntity<CreatedUserDTO> signIn(@RequestBody @Valid LoginUserDTO user) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.email(), user.password());
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.email(),
+                user.password());
         Authentication authentication = authenticationManager.authenticate(token);
         Users authenticatedUser = (Users) authentication.getPrincipal();
         String authenticationToken = tokenService.signToken(authenticatedUser);
-        return ResponseEntity.ok(new CreatedUserDTO(authenticatedUser.getId(), authenticatedUser.getName(), authenticatedUser.getEmail(), authenticationToken));
+        return ResponseEntity.ok(new CreatedUserDTO(authenticatedUser.getId(), authenticatedUser.getName(),
+                authenticatedUser.getEmail(), authenticationToken));
     }
 
     @PostMapping("/forgotPassword")
@@ -48,7 +49,8 @@ public class AuthController {
     }
 
     @GetMapping("/confirmRecoveryCode")
-    public ResponseEntity<?> confirmRecoveryCode(@RequestParam(required = true) String email, @RequestParam(required = true) @NotBlank String code) {
+    public ResponseEntity<?> confirmRecoveryCode(@RequestParam(required = true) String email,
+                                                 @RequestParam(required = true) @NotBlank String code) {
         HttpStatusCode result = service.confirmRecoveryCode(email, code);
         return ResponseEntity.status(result).body(email);
     }
