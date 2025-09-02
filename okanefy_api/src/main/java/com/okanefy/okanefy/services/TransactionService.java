@@ -1,6 +1,7 @@
 package com.okanefy.okanefy.services;
 
 import com.okanefy.okanefy.dto.transactions.*;
+import com.okanefy.okanefy.dto.transactions_payment_method.TransactionPaymentMethodDTO;
 import com.okanefy.okanefy.enums.TransactionFrequency;
 import com.okanefy.okanefy.models.*;
 import com.okanefy.okanefy.repositories.*;

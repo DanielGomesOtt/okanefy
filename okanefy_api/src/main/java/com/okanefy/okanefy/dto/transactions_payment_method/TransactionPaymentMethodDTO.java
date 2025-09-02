@@ -1,4 +1,4 @@
-package com.okanefy.okanefy.dto.transactions;
+package com.okanefy.okanefy.dto.transactions_payment_method;
 
 public record TransactionPaymentMethodDTO(
         Long id,

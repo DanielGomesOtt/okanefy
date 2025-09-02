@@ -1,5 +1,7 @@
 package com.okanefy.okanefy.dto.transactions;
 
+import com.okanefy.okanefy.dto.transactions_payment_method.TransactionPaymentMethodDTO;
+
 import java.util.List;
 
 public record TransactionDTO(
