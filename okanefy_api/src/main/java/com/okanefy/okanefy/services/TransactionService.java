@@ -35,7 +35,7 @@ public class TransactionService {
     private TransactionsPaymentMethodRepository transactionsPaymentMethodRepository;
 
     @Transactional
-    public CreatedTransactionDTO save(@Valid CreateTransactionDTO data) {
+    public CreatedTransactionDTO save(CreateTransactionDTO data) {
         Users user = usersRepository.findById(data.user_id()).get();
         Category category = categoryRepository.findById(data.category_id()).get();
         Transaction transaction = new Transaction(null, data.initial_date(), "", data.amount(),
@@ -131,7 +131,7 @@ public class TransactionService {
     }
 
     @Transactional
-    public TransactionDTO update(@Valid UpdateTransactionDTO data) {
+    public TransactionDTO update(UpdateTransactionDTO data) {
         Optional<Transaction> transaction = repository.findById(data.id());
         Optional<Category> category = categoryRepository.findById(data.category_id());
 

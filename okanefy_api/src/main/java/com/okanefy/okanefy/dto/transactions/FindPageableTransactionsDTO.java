@@ -12,4 +12,5 @@ public record FindPageableTransactionsDTO(
         Long totalElements,
         int totalPages
 ) {
+
 }
