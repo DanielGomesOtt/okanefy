@@ -4,6 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 src/main/resources/application.properties
+src/main/resources/application-docker.properties
 
 
 ### STS ###
@@ -36,3 +37,6 @@ build/
 
 ### enviroment variables ###
 .env
+
+### docker db volumes ###
+db_volumes/
