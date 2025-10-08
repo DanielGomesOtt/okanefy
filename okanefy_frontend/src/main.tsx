@@ -4,6 +4,9 @@ import { BrowserRouter, Routes, Route } from 'react-router'
 import { HeroUIProvider } from '@heroui/react';
 import { StrictMode } from 'react';
 import Home from './pages/home/Home';
+import General from './pages/general/General';
+import PublicRoute from './routes/PublicRoute';
+import PrivateRoute from './routes/PrivateRoute';
 
 const rootElement = document.getElementById('root');
 
@@ -13,7 +16,8 @@ if (rootElement) {
         <HeroUIProvider>
             <BrowserRouter>
                 <Routes>
-                    <Route path='/' element={<Home />}/>
+                    <Route path='/' element={<PublicRoute><Home /></PublicRoute>}/>
+                    <Route path='/geral' element={<PrivateRoute><General /></PrivateRoute>}/>
                 </Routes>
             </BrowserRouter>
         </HeroUIProvider>
