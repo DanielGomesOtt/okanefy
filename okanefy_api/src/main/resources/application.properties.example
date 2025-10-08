@@ -15,3 +15,4 @@ spring.mail.password=
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
 smtp.mail=
+api.security.cors.url=

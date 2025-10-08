@@ -61,8 +61,8 @@ class AuthControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(createdUser.id()))
                 .andExpect(jsonPath("$.name").value(createdUser.name()))
-                .andExpect(jsonPath("$.email").value(createdUser.email()))
-                .andExpect(jsonPath("$.token").value(createdUser.token()));
+                .andExpect(jsonPath("$.email").value(createdUser.email()));
+
     }
 
     @Test

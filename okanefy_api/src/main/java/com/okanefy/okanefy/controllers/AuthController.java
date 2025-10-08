@@ -7,15 +7,21 @@ import com.okanefy.okanefy.services.AuthService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
 @RestController
 public class AuthController {
+
+    @Value("${api.security.token.duration}")
+    private int expiration;
 
     @Autowired
     private AuthService service;
@@ -61,4 +67,15 @@ public class AuthController {
         return ResponseEntity.status(204).build();
     }
 
+    @GetMapping("/verifyAuthentication")
+    public ResponseEntity<?> verifyAuthentication(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            return ResponseEntity.ok(Map.of(
+                    "authenticated", true,
+                    "username", authentication.getName()
+            ));
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("authenticated", false));
+    }
 }

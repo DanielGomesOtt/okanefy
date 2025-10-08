@@ -5,6 +5,7 @@ import com.okanefy.okanefy.services.TokenService;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,4 +52,5 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         return null;
     }
+
 }
