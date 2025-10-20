@@ -3,7 +3,7 @@ import {
   NavbarBrand,
 } from "@heroui/react";
 
-export const OkanefyLogo = () => {
+const OkanefyLogo = () => {
   return (
     <div className="mt-5">
         <img src="src\assets\okanefy_logo.png" className="w-2/6"></img>

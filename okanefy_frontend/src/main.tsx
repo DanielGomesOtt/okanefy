@@ -7,6 +7,8 @@ import Home from './pages/home/Home';
 import General from './pages/general/General';
 import PublicRoute from './routes/PublicRoute';
 import PrivateRoute from './routes/PrivateRoute';
+import Profile from './pages/profile/Profile';
+import ForgotPassword from './pages/forgot_password/ForgotPassword';
 
 const rootElement = document.getElementById('root');
 
@@ -17,7 +19,9 @@ if (rootElement) {
             <BrowserRouter>
                 <Routes>
                     <Route path='/' element={<PublicRoute><Home /></PublicRoute>}/>
+                    <Route path='/esqueceu_senha' element={<PublicRoute><ForgotPassword /></PublicRoute>}/>
                     <Route path='/geral' element={<PrivateRoute><General /></PrivateRoute>}/>
+                    <Route path='/profile' element={<PrivateRoute><Profile /></PrivateRoute>}/>
                 </Routes>
             </BrowserRouter>
         </HeroUIProvider>

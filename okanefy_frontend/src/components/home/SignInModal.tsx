@@ -8,14 +8,13 @@ import {
   Input,
 } from "@heroui/react";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { BASE_URL } from "../../utils/constants";
 
 interface SignInModalProps {
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isOpen: boolean
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
-
-const baseUrl = import.meta.env.VITE_API_BASE_URL.endsWith("/") ? import.meta.env.VITE_API_BASE_URL : import.meta.env.VITE_API_BASE_URL + "/";
 
 
 export default function SignInModal({ isOpen, setIsOpen }: SignInModalProps) {
@@ -39,7 +38,7 @@ export default function SignInModal({ isOpen, setIsOpen }: SignInModalProps) {
         "password": password
       }
 
-      const response = await fetch(baseUrl + 'signIn', {
+      const response = await fetch(BASE_URL + 'signIn', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -118,6 +117,12 @@ export default function SignInModal({ isOpen, setIsOpen }: SignInModalProps) {
                         onChange={(e) => setPassword(e.target.value)}
                         value={password}
                     />
+
+                    <div className="w-full text-end">
+                      <Link to="/esqueceu_senha" className="text-blue-400 font-semibold text-xs underline">
+                        Esqueceu a senha?
+                      </Link>
+                    </div>
                     <div className="flex w-full gap-2">
                         <Button color="primary" type="submit" className="w-full bg-green-500">
                           Confirmar

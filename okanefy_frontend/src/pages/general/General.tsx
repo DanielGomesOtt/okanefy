@@ -1,8 +1,9 @@
 import React from 'react'
+import GeneralNavBar from '../../components/general/GeneralNavBar'
 
 function General() {
   return (
-    <div>General</div>
+    <GeneralNavBar />
   )
 }
 

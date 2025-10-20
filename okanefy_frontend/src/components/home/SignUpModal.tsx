@@ -9,13 +9,13 @@ import {
 } from "@heroui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { BASE_URL } from "../../utils/constants";
 
 interface SignUpModalProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL.endsWith("/") ? import.meta.env.VITE_API_BASE_URL : import.meta.env.VITE_API_BASE_URL + "/";
 
 
 export default function SignUpModal({ isOpen, setIsOpen }: SignUpModalProps) {
@@ -42,7 +42,7 @@ export default function SignUpModal({ isOpen, setIsOpen }: SignUpModalProps) {
         "password": password
       }
 
-      const response = await fetch(baseUrl + 'signUp', {
+      const response = await fetch(BASE_URL + 'signUp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -1,6 +1,7 @@
 import { JSX, useEffect, useState } from "react";
 import { Navigate } from "react-router";
 import { verifyToken } from "../utils/verifyToken";
+import { Progress } from "@heroui/react";
 
 export default function PrivateRoute({ children }: { children: JSX.Element }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -17,7 +18,7 @@ export default function PrivateRoute({ children }: { children: JSX.Element }) {
   }, []);
 
   if (isAuthenticated === null) {
-    return <div>Verificando autenticação...</div>;
+    return <div className="w-full h-full flex items-center justify-center"><Progress isIndeterminate aria-label="Loading..." className="max-w-md" size="sm" />;</div>;
   }
 
   if (!isAuthenticated) {
