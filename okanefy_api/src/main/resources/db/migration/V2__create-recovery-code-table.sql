@@ -3,6 +3,7 @@ CREATE TABLE recovery_code (
     email varchar(100),
     code varchar(200),
     expiration_date DATETIME,
+    used tinyint,
 
     primary key(id)
 );

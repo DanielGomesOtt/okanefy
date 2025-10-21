@@ -121,7 +121,7 @@ class AuthServiceTest {
     void shouldConfirmRecoveryCode() {
         String email = "user@email.com";
         String code = "code";
-        RecoveryCode recoveryCode = new RecoveryCode(1L, email, code, "2025-07-27 00:00:00");
+        RecoveryCode recoveryCode = new RecoveryCode(1L, email, code, "2025-07-27 00:00:00", 0);
 
         when(recoveryCodeRepository.findValidCodeByEmail(email, code)).thenReturn(Optional.of(recoveryCode));
 

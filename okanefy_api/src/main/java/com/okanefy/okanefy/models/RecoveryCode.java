@@ -22,6 +22,7 @@ public class RecoveryCode {
     private String email;
     private String code;
     private String expirationDate;
+    private int used;
 
     @Override
     public final boolean equals(Object o) {

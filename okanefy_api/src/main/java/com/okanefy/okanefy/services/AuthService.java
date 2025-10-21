@@ -82,15 +82,18 @@ public class AuthService implements UserDetailsService {
             recoveryCode.setCode(code);
             recoveryCode.setExpirationDate(nowFormatted);
             recoveryCode.setEmail(data.email());
+            recoveryCode.setUsed(0);
             recoveryCodeRepository.save(recoveryCode);
 
             sendRecoveryCodeEmail(data.email(), recoveryCode.getCode());
         }
     }
 
+    @Transactional
     public HttpStatusCode confirmRecoveryCode(String email, String code) {
         Optional<RecoveryCode> recoveryCode = recoveryCodeRepository.findValidCodeByEmail(email, code);
         if(recoveryCode.isPresent()) {
+            recoveryCode.get().setUsed(1);
             return HttpStatusCode.valueOf(200);
         }
 
