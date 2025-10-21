@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { BASE_URL } from "../../utils/constants";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 interface SignUpModalProps {
   isOpen: boolean;
@@ -24,7 +25,20 @@ export default function SignUpModal({ isOpen, setIsOpen }: SignUpModalProps) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
+  const [isVisiblePassword, setIsVisiblePassword] = useState(false)
+  const [typeInputPassword, setTypeInputPassword] = useState("password")
 
+
+  function changeInputPassword() {
+    if(typeInputPassword == "password") {
+      setIsVisiblePassword(true)
+      setTypeInputPassword("text")
+    } else {
+      setIsVisiblePassword(false)
+      setTypeInputPassword("password")
+    }
+  }
+  
   function resetForm() {
     setName("");
     setEmail("");
@@ -126,10 +140,23 @@ export default function SignUpModal({ isOpen, setIsOpen }: SignUpModalProps) {
                         labelPlacement="inside"
                         name="password"
                         placeholder="Informe uma senha"
-                        type="password"
+                        type={typeInputPassword}
                         minLength={8}
                         onChange={(e) => setPassword(e.target.value)}
                         value={password}
+                        endContent={
+                          <Button
+                            isIconOnly
+                            variant="light"
+                            onPress={changeInputPassword}
+                          >
+                            {isVisiblePassword ? (
+                              <AiOutlineEye size={20} className="text-default-500" />
+                            ) : (
+                              <AiOutlineEyeInvisible size={20} className="text-default-500" />
+                            )}
+                          </Button>
+                        }
                     />
                     <div className="flex w-full gap-2">
                         <Button color="primary" type="submit" className="w-full bg-green-500">

@@ -1,7 +1,34 @@
 import { Button, Card, CardBody, Form, Input } from "@heroui/react"
+import { useState } from "react"
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 
 
 function EditForm() {
+  const [isVisiblePassword, setIsVisiblePassword] = useState(false)
+  const [typeInputPassword, setTypeInputPassword] = useState("password")
+  const [isVisibleConfirmPassword, setIsVisibleConfirmPassword] = useState(false)
+  const [typeInputConfirmPassword, setTypeInputConfirmPassword] = useState("password")
+
+
+  function changeInputPassword() {
+    if(typeInputPassword == "password") {
+      setIsVisiblePassword(true)
+      setTypeInputPassword("text")
+    } else {
+      setIsVisiblePassword(false)
+      setTypeInputPassword("password")
+    }
+  }
+
+  function changeInputConfirmPassword() {
+    if(typeInputConfirmPassword == "password") {
+      setIsVisibleConfirmPassword(true)
+      setTypeInputConfirmPassword("text")
+    } else {
+      setIsVisibleConfirmPassword(false)
+      setTypeInputConfirmPassword("password")
+    }
+  }
   return (
     <Card className="w-1/5">
         <CardBody>
@@ -38,8 +65,21 @@ function EditForm() {
                     labelPlacement="inside"
                     name="password"
                     placeholder="Informe uma senha"
-                    type="password"
+                    type={typeInputPassword}
                     minLength={8}
+                    endContent={
+                        <Button
+                        isIconOnly
+                        variant="light"
+                        onPress={changeInputPassword}
+                        >
+                        {isVisiblePassword ? (
+                            <AiOutlineEye size={20} className="text-default-500" />
+                        ) : (
+                            <AiOutlineEyeInvisible size={20} className="text-default-500" />
+                        )}
+                        </Button>
+                    }
                 />
 
                 <Input
@@ -49,8 +89,21 @@ function EditForm() {
                     labelPlacement="inside"
                     name="confirm_password"
                     placeholder="Informe a senha novamente"
-                    type="password"
+                    type={typeInputConfirmPassword}
                     minLength={8}
+                    endContent={
+                        <Button
+                        isIconOnly
+                        variant="light"
+                        onPress={changeInputConfirmPassword}
+                        >
+                        {isVisibleConfirmPassword ? (
+                            <AiOutlineEye size={20} className="text-default-500" />
+                        ) : (
+                            <AiOutlineEyeInvisible size={20} className="text-default-500" />
+                        )}
+                        </Button>
+                    }
                 />
                 
                 <Button color="primary" type="submit" className="w-full bg-green-500">

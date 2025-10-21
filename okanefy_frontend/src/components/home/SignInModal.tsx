@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { BASE_URL } from "../../utils/constants";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 interface SignInModalProps {
   isOpen: boolean
@@ -18,10 +19,23 @@ interface SignInModalProps {
 
 
 export default function SignInModal({ isOpen, setIsOpen }: SignInModalProps) {
-  const navigate = useNavigate();
-  const [registerError, setRegisterError] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const navigate = useNavigate()
+  const [registerError, setRegisterError] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isVisiblePassword, setIsVisiblePassword] = useState(false)
+  const [typeInputPassword, setTypeInputPassword] = useState("password")
+
+
+  function changeInputPassword() {
+    if(typeInputPassword == "password") {
+      setIsVisiblePassword(true)
+      setTypeInputPassword("text")
+    } else {
+      setIsVisiblePassword(false)
+      setTypeInputPassword("password")
+    }
+  }
 
   function resetForm() {
     setEmail("");
@@ -112,10 +126,23 @@ export default function SignInModal({ isOpen, setIsOpen }: SignInModalProps) {
                         labelPlacement="inside"
                         name="password"
                         placeholder="Informe uma senha"
-                        type="password"
+                        type={typeInputPassword}
                         minLength={8}
                         onChange={(e) => setPassword(e.target.value)}
                         value={password}
+                        endContent={
+                          <Button
+                            isIconOnly
+                            variant="light"
+                            onPress={changeInputPassword}
+                          >
+                            {isVisiblePassword ? (
+                              <AiOutlineEye size={20} className="text-default-500" />
+                            ) : (
+                              <AiOutlineEyeInvisible size={20} className="text-default-500" />
+                            )}
+                          </Button>
+                        }
                     />
 
                     <div className="w-full text-end">

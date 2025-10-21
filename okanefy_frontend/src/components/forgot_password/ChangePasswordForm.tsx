@@ -2,6 +2,7 @@ import { Button, Card, CardBody, Form, Input } from "@heroui/react"
 import { useState } from "react"
 import { BASE_URL } from "../../utils/constants"
 import { useNavigate } from "react-router"
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 
 interface ChangePasswordFormProps {
   setStep: React.Dispatch<React.SetStateAction<string>>
@@ -16,6 +17,31 @@ function ChangePasswordForm({setStep}: ChangePasswordFormProps) {
     const [submitted, setSubmitted] = useState(false);
     const navigate = useNavigate()
     const passwordsMatch = password === confirmPassword
+    const [isVisiblePassword, setIsVisiblePassword] = useState(false)
+    const [typeInputPassword, setTypeInputPassword] = useState("password")
+    const [isVisibleConfirmPassword, setIsVisibleConfirmPassword] = useState(false)
+    const [typeInputConfirmPassword, setTypeInputConfirmPassword] = useState("password")
+
+
+    function changeInputPassword() {
+        if(typeInputPassword == "password") {
+        setIsVisiblePassword(true)
+        setTypeInputPassword("text")
+        } else {
+        setIsVisiblePassword(false)
+        setTypeInputPassword("password")
+        }
+    }
+
+    function changeInputConfirmPassword() {
+        if(typeInputConfirmPassword == "password") {
+        setIsVisibleConfirmPassword(true)
+        setTypeInputConfirmPassword("text")
+        } else {
+        setIsVisibleConfirmPassword(false)
+        setTypeInputConfirmPassword("password")
+        }
+    }
 
     async function changePassword(e: any) {
         e.preventDefault();
@@ -79,9 +105,22 @@ function ChangePasswordForm({setStep}: ChangePasswordFormProps) {
                         labelPlacement="inside"
                         name="password"
                         placeholder="Insira uma senha"
-                        type="password"
+                        type={typeInputPassword}
                         minLength={8}
                         onChange={(e) => setPassword(e.target.value)}
+                        endContent={
+                            <Button
+                            isIconOnly
+                            variant="light"
+                            onPress={changeInputPassword}
+                            >
+                            {isVisiblePassword ? (
+                                <AiOutlineEye size={20} className="text-default-500" />
+                            ) : (
+                                <AiOutlineEyeInvisible size={20} className="text-default-500" />
+                            )}
+                            </Button>
+                        }
                     />
 
                     <Input
@@ -93,10 +132,23 @@ function ChangePasswordForm({setStep}: ChangePasswordFormProps) {
                         labelPlacement="inside"
                         name="confirmPassword"
                         placeholder="Confirme sua senha"
-                        type="password"
+                        type={typeInputConfirmPassword}
                         minLength={8}
                         isInvalid={submitted && !passwordsMatch}
                         onChange={(e) => setConfirmPassword(e.target.value)}
+                        endContent={
+                            <Button
+                                isIconOnly
+                                variant="light"
+                                onPress={changeInputConfirmPassword}
+                            >
+                                {isVisibleConfirmPassword ? (
+                                    <AiOutlineEye size={20} className="text-default-500" />
+                                ) : (
+                                    <AiOutlineEyeInvisible size={20} className="text-default-500" />
+                                )}
+                            </Button>
+                        }
                     />
                     <Button color="primary" type="submit" className="w-full bg-green-500" disabled={disableSubmitButton}>
                         Salvar
