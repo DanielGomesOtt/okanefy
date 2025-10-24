@@ -27,26 +27,35 @@ public class UsersService {
 
     @Transactional
     public UsersDTO updateUser(UsersDTO data) {
-        Optional<Users> user = repository.findById(data.id());
+        Optional<Users> findUser = repository.findById(data.id());
 
-        if(user.isPresent()) {
-            Optional<UserDetails> alreadyExists = repository.findByEmailAndEmailNotAndStatus(
-                    data.email(), user.get().getEmail() ,1
-            );
-
-            if (alreadyExists.isPresent()) {
-                throw new UserAlreadyExistsException("Esse e-mail já pertence a uma conta.");
+        if(findUser.isPresent()) {
+            String token = null;
+            Users user = findUser.get();
+            if(!data.name().isEmpty()) {
+                user.setName(data.name());
             }
 
-            String encodedPassword = passwordEncoder.encode(data.password());
+            if(!data.email().isEmpty() && !data.email().equals(user.getEmail())){
+                Optional<UserDetails> alreadyExists = repository.findByEmailAndEmailNotAndStatus(
+                        data.email(), user.getEmail() ,1
+                );
 
-            user.get().setName(data.name());
-            user.get().setEmail(data.email());
-            user.get().setPassword(encodedPassword);
+                if (alreadyExists.isPresent()) {
+                    throw new UserAlreadyExistsException("Esse e-mail já pertence a uma conta.");
+                }
 
-            String token = tokenService.signToken(user.get());
+                user.setEmail(data.email());
+                token = tokenService.signToken(user);
+            }
 
-            return new UsersDTO(user.get(), token);
+            if(!data.password().isEmpty() && data.password().length() >= 8) {
+                String encodedPassword = passwordEncoder.encode(data.password());
+
+                user.setPassword(encodedPassword);
+            }
+
+            return new UsersDTO(user, token);
         }
 
         throw new UserNotFoundException("O usuário não foi encontrado.");

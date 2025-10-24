@@ -3,9 +3,10 @@ package com.okanefy.okanefy.dto.users;
 import com.okanefy.okanefy.models.Users;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
 
 public record UsersDTO(
+        @NotNull(message = "Informe o id do usuario.")
         Long id,
 
         @NotBlank(message = "O nome não pode ser vazio.")
@@ -14,7 +15,6 @@ public record UsersDTO(
         @Email(message = "Forneça um e-mail válido.")
         String email,
 
-        @Size(min=8, message = "A senha deve ter no mínimo 8 caracteres.")
         String password,
 
         String token
