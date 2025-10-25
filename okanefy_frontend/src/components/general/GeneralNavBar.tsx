@@ -12,11 +12,15 @@ import {
 } from "@heroui/react";
 import { LogoutIcon } from "../icons/LogoutIcon";
 import { AccountIcon } from "../icons/AccountIcon";
+import { useNavigate } from "react-router";
 
 const OkanefyLogo = () => {
+  const navigate = useNavigate()
   return (
     <div>
-      <img src="src/assets/okanefy_logo.png" className="w-3/6" alt="Okanefy Logo" />
+      <Button onPress={() => navigate("/")} className="bg-transparent">
+        <img src="src/assets/okanefy_logo.png" className="w-3/6 md:w-4/6 lg:w-3/6" alt="Okanefy Logo"/>
+      </Button>
     </div>
   );
 };
@@ -25,7 +29,7 @@ export default function GeneralNavBar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const menuItems = [
-    { label: "Categorias", href: "#" },
+    { label: "Categorias", href: "/categorias" },
     { label: "Formas de pagamentos", href: "#" },
     { label: "Relatórios", href: "#" },
     { label: "Conta", href: "/profile", icon: <AccountIcon /> },
@@ -57,12 +61,12 @@ export default function GeneralNavBar() {
      
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <Link color="foreground" href="/categorias" className={location.pathname === "/categorias" ? "font-bold underline text-blue-400" : ""}>
             Categorias
           </Link>
         </NavbarItem>
-        <NavbarItem isActive>
-          <Link aria-current="page" href="#">
+        <NavbarItem>
+          <Link color="foreground" href="#">
             Formas de pagamentos
           </Link>
         </NavbarItem>

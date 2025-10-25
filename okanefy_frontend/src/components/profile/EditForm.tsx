@@ -55,7 +55,7 @@ function EditForm() {
       }
 
       const data = await response.json()
-      console.log(data)
+      
       localStorage.setItem("id", data.id)
       localStorage.setItem("name", data.name)
       localStorage.setItem("email", data.email)
