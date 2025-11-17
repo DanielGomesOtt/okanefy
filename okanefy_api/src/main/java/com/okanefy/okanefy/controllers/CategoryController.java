@@ -1,16 +1,11 @@
 package com.okanefy.okanefy.controllers;
 
-import com.okanefy.okanefy.dto.category.CategoriesListDTO;
-import com.okanefy.okanefy.dto.category.CreatedCategoryDTO;
-import com.okanefy.okanefy.dto.category.NewCategoryDTO;
-import com.okanefy.okanefy.dto.category.UpdateCategoryDTO;
+import com.okanefy.okanefy.dto.category.*;
 import com.okanefy.okanefy.services.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/category")
@@ -36,9 +31,11 @@ public class CategoryController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<CategoriesListDTO>> findAll(@PathVariable Long userId,
-                                                           @RequestParam(required = false) String name,
-                                                           @RequestParam(required = false) String type) {
-        return ResponseEntity.ok(service.findAll(userId, name, type));
+    public ResponseEntity<CategoriesListPaginationDTO> findAll(@PathVariable Long userId,
+                                                               @RequestParam(required = false) String name,
+                                                               @RequestParam(required = false) String type,
+                                                               @RequestParam(required = true) int page,
+                                                               @RequestParam(required = true) int size) {
+        return ResponseEntity.ok(service.findAll(userId, name, type, page, size));
     }
 }

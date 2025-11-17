@@ -2,6 +2,8 @@ package com.okanefy.okanefy.dto.category;
 
 import com.okanefy.okanefy.models.Category;
 
+import java.util.List;
+
 public record CategoriesListDTO(
         Long id,
         String name,

@@ -1,9 +1,6 @@
 package com.okanefy.okanefy.services;
 
-import com.okanefy.okanefy.dto.category.CategoriesListDTO;
-import com.okanefy.okanefy.dto.category.CreatedCategoryDTO;
-import com.okanefy.okanefy.dto.category.NewCategoryDTO;
-import com.okanefy.okanefy.dto.category.UpdateCategoryDTO;
+import com.okanefy.okanefy.dto.category.*;
 import com.okanefy.okanefy.enums.CategoriesTypes;
 import com.okanefy.okanefy.models.Category;
 import com.okanefy.okanefy.models.Users;
@@ -11,6 +8,9 @@ import com.okanefy.okanefy.repositories.CategoryRepository;
 import com.okanefy.okanefy.repositories.UsersRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,20 +52,22 @@ public class CategoryService {
         return null;
     }
 
-    public List<CategoriesListDTO> findAll(Long userId, String name, String type) {
-        Optional<List<Category>> categories;
+    public CategoriesListPaginationDTO findAll(Long userId, String name, String type, int page, int size) {
+        Page<Category> categories;
+        Pageable pageable = PageRequest.of(page, size);
         if(name != null && type != null) {
-            categories = repository.findAllByNameContainingIgnoreCaseAndTypeAndUserIdAndStatus(name, CategoriesTypes.valueOf(type.toUpperCase()), userId, 1);
+            categories = repository.findAllByNameContainingIgnoreCaseAndTypeAndUserIdAndStatus(name, CategoriesTypes.valueOf(type.toUpperCase()), userId, 1, pageable);
         } else if(name != null) {
-            categories = repository.findAllByNameContainingIgnoreCaseAndUserIdAndStatus(name, userId, 1);
+            categories = repository.findAllByNameContainingIgnoreCaseAndUserIdAndStatus(name, userId, 1, pageable);
         } else if(type != null) {
-            categories = repository.findAllByTypeAndUserIdAndStatus(CategoriesTypes.valueOf(type.toUpperCase()), userId, 1);
+            categories = repository.findAllByTypeAndUserIdAndStatus(CategoriesTypes.valueOf(type.toUpperCase()), userId, 1, pageable);
         } else {
-            categories = repository.findAllByUserIdAndStatus(userId, 1);
+            categories = repository.findAllByUserIdAndStatus(userId, 1, pageable);
         }
-
-        return categories.map(categoryList -> categoryList
-                .stream()
-                .map(CategoriesListDTO::new).toList()).orElseGet(List::of);
+        List<CategoriesListDTO> formattedCategories = categories.map(CategoriesListDTO::new).getContent();
+        return new CategoriesListPaginationDTO(formattedCategories, categories.getTotalElements(),
+                categories.getTotalPages(), categories.getNumber(), categories.getNumberOfElements(),
+                categories.getSize(), categories.isFirst(), categories.isLast(), categories.hasNext(),
+                categories.nextOrLastPageable());
     }
 }

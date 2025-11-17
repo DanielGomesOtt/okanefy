@@ -1,9 +1,6 @@
 package com.okanefy.okanefy.services;
 
-import com.okanefy.okanefy.dto.category.CategoriesListDTO;
-import com.okanefy.okanefy.dto.category.CreatedCategoryDTO;
-import com.okanefy.okanefy.dto.category.NewCategoryDTO;
-import com.okanefy.okanefy.dto.category.UpdateCategoryDTO;
+import com.okanefy.okanefy.dto.category.*;
 import com.okanefy.okanefy.enums.CategoriesTypes;
 import com.okanefy.okanefy.models.Category;
 import com.okanefy.okanefy.models.Users;
@@ -15,6 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -93,168 +93,202 @@ class CategoryServiceTest {
     @DisplayName("Should return categories using name and type")
     void shouldReturnCategoriesByNameAndType() {
         Users user = new Users(1L, "user", "user@email.com", "12345678", 1);
-        List<Category> categories = List.of(new Category(1L, "category", CategoriesTypes.valueOf("INCOME"), 1, user));
+        Category category = new Category(1L, "category", CategoriesTypes.INCOME, 1, user);
+
+        Page<Category> page = new PageImpl<>(List.of(category));
 
         when(repository.findAllByNameContainingIgnoreCaseAndTypeAndUserIdAndStatus(
                 "category",
-                CategoriesTypes.valueOf("INCOME"),
+                CategoriesTypes.INCOME,
                 1L,
-                1)).thenReturn(Optional.of(categories));
+                1,
+                PageRequest.of(0, 10)
+        )).thenReturn(page);
 
-        List<CategoriesListDTO> result = service.findAll(1L, "category", "INCOME");
+        CategoriesListPaginationDTO result = service.findAll(1L, "category", "INCOME", 0, 10);
 
-        assertEquals(1, result.size());
-        assertEquals("category", result.getFirst().name());
-        assertEquals("INCOME", result.getFirst().type());
+        assertEquals(1, result.categories().size());
+        assertEquals("category", result.categories().getFirst().name());
+        assertEquals("INCOME", result.categories().getFirst().type());
 
-        verify(repository).findAllByNameContainingIgnoreCaseAndTypeAndUserIdAndStatus("category",
-                CategoriesTypes.valueOf("INCOME"),
+        verify(repository).findAllByNameContainingIgnoreCaseAndTypeAndUserIdAndStatus(
+                "category",
+                CategoriesTypes.INCOME,
                 1L,
-                1);
+                1,
+                PageRequest.of(0, 10)
+        );
     }
 
     @Test
     @DisplayName("Should return categories using name")
     void shouldReturnCategoriesByName() {
         Users user = new Users(1L, "user", "user@email.com", "12345678", 1);
-        List<Category> categories = List.of(new Category(1L, "category", CategoriesTypes.valueOf("INCOME"), 1, user));
+        Category category = new Category(1L, "category", CategoriesTypes.INCOME, 1, user);
+
+        Page<Category> page = new PageImpl<>(List.of(category));
 
         when(repository.findAllByNameContainingIgnoreCaseAndUserIdAndStatus(
                 "category",
                 1L,
-                1)).thenReturn(Optional.of(categories));
+                1,
+                PageRequest.of(0, 10)
+        )).thenReturn(page);
 
-        List<CategoriesListDTO> result = service.findAll(1L, "category", null);
+        CategoriesListPaginationDTO result = service.findAll(1L, "category", null, 0, 10);
 
-        assertEquals(1, result.size());
-        assertEquals("category", result.getFirst().name());
+        assertEquals(1, result.categories().size());
+        assertEquals("category", result.categories().getFirst().name());
 
-        verify(repository).findAllByNameContainingIgnoreCaseAndUserIdAndStatus("category",
+        verify(repository).findAllByNameContainingIgnoreCaseAndUserIdAndStatus(
+                "category",
                 1L,
-                1);
+                1,
+                PageRequest.of(0, 10)
+        );
     }
 
     @Test
     @DisplayName("Should return categories using type")
     void shouldReturnCategoriesByType() {
         Users user = new Users(1L, "user", "user@email.com", "12345678", 1);
-        List<Category> categories = List.of(new Category(1L, "category", CategoriesTypes.valueOf("INCOME"), 1, user));
+        Category category = new Category(1L, "category", CategoriesTypes.INCOME, 1, user);
+
+        Page<Category> page = new PageImpl<>(List.of(category));
 
         when(repository.findAllByTypeAndUserIdAndStatus(
-                CategoriesTypes.valueOf("INCOME"),
+                CategoriesTypes.INCOME,
                 1L,
-                1)).thenReturn(Optional.of(categories));
+                1,
+                PageRequest.of(0, 10)
+        )).thenReturn(page);
 
-        List<CategoriesListDTO> result = service.findAll(1L, null, "INCOME");
+        CategoriesListPaginationDTO result = service.findAll(1L, null, "INCOME", 0, 10);
 
-        assertEquals(1, result.size());
-        assertEquals("INCOME", result.getFirst().type());
+        assertEquals(1, result.categories().size());
+        assertEquals("INCOME", result.categories().getFirst().type());
 
         verify(repository).findAllByTypeAndUserIdAndStatus(
-                CategoriesTypes.valueOf("INCOME"),
+                CategoriesTypes.INCOME,
                 1L,
-                1);
+                1,
+                PageRequest.of(0, 10)
+        );
     }
 
     @Test
     @DisplayName("Should return categories without params")
     void shouldReturnCategoriesWithoutParams() {
         Users user = new Users(1L, "user", "user@email.com", "12345678", 1);
-        List<Category> categories = List.of(new Category(1L, "category", CategoriesTypes.valueOf("INCOME"), 1, user));
+        Category category = new Category(1L, "category", CategoriesTypes.INCOME, 1, user);
+
+        Page<Category> page = new PageImpl<>(List.of(category));
 
         when(repository.findAllByUserIdAndStatus(
                 1L,
-                1)).thenReturn(Optional.of(categories));
+                1,
+                PageRequest.of(0, 10)
+        )).thenReturn(page);
 
-        List<CategoriesListDTO> result = service.findAll(1L, null, null);
+        CategoriesListPaginationDTO result = service.findAll(1L, null, null, 0, 10);
 
-        assertEquals(1, result.size());
-
+        assertEquals(1, result.categories().size());
         verify(repository).findAllByUserIdAndStatus(
                 1L,
-                1);
+                1,
+                PageRequest.of(0, 10)
+        );
     }
 
     @Test
     @DisplayName("Should return an empty list using name and type")
     void shouldReturnEmptyListByNameAndType() {
-        Users user = new Users(1L, "user", "user@email.com", "12345678", 1);
-        List<Category> categories = List.of(new Category(1L, "category", CategoriesTypes.valueOf("INCOME"), 1, user));
+        Page<Category> emptyPage = Page.empty(PageRequest.of(0, 10));
 
         when(repository.findAllByNameContainingIgnoreCaseAndTypeAndUserIdAndStatus(
                 "category",
-                CategoriesTypes.valueOf("INCOME"),
+                CategoriesTypes.INCOME,
                 1L,
-                1)).thenReturn(Optional.empty());
+                1,
+                PageRequest.of(0, 10)
+        )).thenReturn(emptyPage);
 
-        List<CategoriesListDTO> result = service.findAll(1L, "category", "INCOME");
+        CategoriesListPaginationDTO result = service.findAll(1L, "category", "INCOME", 0, 10);
 
-        assertTrue(result.isEmpty());
-
-
-        verify(repository).findAllByNameContainingIgnoreCaseAndTypeAndUserIdAndStatus("category",
-                CategoriesTypes.valueOf("INCOME"),
+        assertTrue(result.categories().isEmpty());
+        verify(repository).findAllByNameContainingIgnoreCaseAndTypeAndUserIdAndStatus(
+                "category",
+                CategoriesTypes.INCOME,
                 1L,
-                1);
+                1,
+                PageRequest.of(0, 10)
+        );
     }
 
     @Test
     @DisplayName("Should return an empty list using name")
     void shouldReturnEmptyListByName() {
-        Users user = new Users(1L, "user", "user@email.com", "12345678", 1);
-        List<Category> categories = List.of(new Category(1L, "category", CategoriesTypes.valueOf("INCOME"), 1, user));
+        Page<Category> emptyPage = Page.empty(PageRequest.of(0, 10));
 
         when(repository.findAllByNameContainingIgnoreCaseAndUserIdAndStatus(
                 "category",
                 1L,
-                1)).thenReturn(Optional.empty());
+                1,
+                PageRequest.of(0, 10)
+        )).thenReturn(emptyPage);
 
-        List<CategoriesListDTO> result = service.findAll(1L, "category", null);
+        CategoriesListPaginationDTO result = service.findAll(1L, "category", null, 0, 10);
 
-        assertTrue(result.isEmpty());
-
-        verify(repository).findAllByNameContainingIgnoreCaseAndUserIdAndStatus("category",
+        assertTrue(result.categories().isEmpty());
+        verify(repository).findAllByNameContainingIgnoreCaseAndUserIdAndStatus(
+                "category",
                 1L,
-                1);
+                1,
+                PageRequest.of(0, 10)
+        );
     }
 
     @Test
     @DisplayName("Should return an empty list using type")
     void shouldReturnEmptyListByType() {
-        Users user = new Users(1L, "user", "user@email.com", "12345678", 1);
-        List<Category> categories = List.of(new Category(1L, "category", CategoriesTypes.valueOf("INCOME"), 1, user));
+        Page<Category> emptyPage = Page.empty(PageRequest.of(0, 10));
 
         when(repository.findAllByTypeAndUserIdAndStatus(
-                CategoriesTypes.valueOf("INCOME"),
+                CategoriesTypes.INCOME,
                 1L,
-                1)).thenReturn(Optional.empty());
+                1,
+                PageRequest.of(0, 10)
+        )).thenReturn(emptyPage);
 
-        List<CategoriesListDTO> result = service.findAll(1L, null, "INCOME");
+        CategoriesListPaginationDTO result = service.findAll(1L, null, "INCOME", 0, 10);
 
-        assertTrue(result.isEmpty());
-
+        assertTrue(result.categories().isEmpty());
         verify(repository).findAllByTypeAndUserIdAndStatus(
-                CategoriesTypes.valueOf("INCOME"),
+                CategoriesTypes.INCOME,
                 1L,
-                1);
+                1,
+                PageRequest.of(0, 10)
+        );
     }
 
     @Test
     @DisplayName("Should return an empty list without params")
     void shouldReturnEmptyListWithoutParams() {
-        Users user = new Users(1L, "user", "user@email.com", "12345678", 1);
-        List<Category> categories = List.of(new Category(1L, "category", CategoriesTypes.valueOf("INCOME"), 1, user));
+        Page<Category> emptyPage = Page.empty(PageRequest.of(0, 10));
 
         when(repository.findAllByUserIdAndStatus(
                 1L,
-                1)).thenReturn(Optional.empty());
+                1,
+                PageRequest.of(0, 10)
+        )).thenReturn(emptyPage);
 
-        List<CategoriesListDTO> result = service.findAll(1L, null, null);
+        CategoriesListPaginationDTO result = service.findAll(1L, null, null, 0, 10);
 
-        assertTrue(result.isEmpty());
-
+        assertTrue(result.categories().isEmpty());
         verify(repository).findAllByUserIdAndStatus(
                 1L,
-                1);
+                1,
+                PageRequest.of(0, 10)
+        );
     }
 }

@@ -25,26 +25,26 @@ function ChangePasswordForm({setStep}: ChangePasswordFormProps) {
 
     function changeInputPassword() {
         if(typeInputPassword == "password") {
-        setIsVisiblePassword(true)
-        setTypeInputPassword("text")
+            setIsVisiblePassword(true)
+            setTypeInputPassword("text")
         } else {
-        setIsVisiblePassword(false)
-        setTypeInputPassword("password")
+            setIsVisiblePassword(false)
+            setTypeInputPassword("password")
         }
     }
 
     function changeInputConfirmPassword() {
         if(typeInputConfirmPassword == "password") {
-        setIsVisibleConfirmPassword(true)
-        setTypeInputConfirmPassword("text")
+            setIsVisibleConfirmPassword(true)
+            setTypeInputConfirmPassword("text")
         } else {
-        setIsVisibleConfirmPassword(false)
-        setTypeInputConfirmPassword("password")
+            setIsVisibleConfirmPassword(false)
+            setTypeInputConfirmPassword("password")
         }
     }
 
     async function changePassword(e: any) {
-        e.preventDefault();
+        e.preventDefault()
         try {
 
             setSubmitted(true)
