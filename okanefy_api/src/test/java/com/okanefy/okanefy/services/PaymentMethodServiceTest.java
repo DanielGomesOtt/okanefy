@@ -2,6 +2,7 @@ package com.okanefy.okanefy.services;
 
 import com.okanefy.okanefy.dto.paymentMethod.CreatePaymentMethodDTO;
 import com.okanefy.okanefy.dto.paymentMethod.PaymentMethodDTO;
+import com.okanefy.okanefy.dto.paymentMethod.PaymentMethodListPaginationDTO;
 import com.okanefy.okanefy.models.PaymentMethod;
 import com.okanefy.okanefy.models.Users;
 import com.okanefy.okanefy.repositories.PaymentMethodRepository;
@@ -12,6 +13,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,35 +38,88 @@ class PaymentMethodServiceTest {
     private PaymentMethodService service;
 
     @Test
-    @DisplayName("Should return a payment methods list")
-    void shouldReturnPaymentMethodList() {
-        Users user = new Users(1L, "user", "user@email.com", "123456789", 1);
-        List<PaymentMethod> paymentMethods = List.of(new PaymentMethod(1L, "method1", false, 1, user, List.of()));
+    @DisplayName("Should return payment methods list without filters")
+    void shouldReturnPaymentMethodsList() {
+        Users user = new Users(1L, "user", "user@email.com", "12345678", 1);
 
-        when(repository.findAllByUserIdAndStatus(1L, 1)).thenReturn(Optional.of(paymentMethods));
+        PaymentMethod method = new PaymentMethod(
+                1L,
+                "method1",
+                false,
+                1,
+                user,
+                List.of()
+        );
 
-        List<PaymentMethodDTO> result = service.findAll(1L);
+        Page<PaymentMethod> page = new PageImpl<>(
+                List.of(method),
+                PageRequest.of(0, 10),
+                1
+        );
 
-        assertEquals(1, result.size());
-        assertEquals("method1", result.getFirst().name());
-        assertEquals(false, result.getFirst().is_installment());
-        assertEquals(1L, result.getFirst().id());
+        when(repository.findAllByUserIdAndStatus(
+                1L,
+                1,
+                PageRequest.of(0, 10)
+        )).thenReturn(page);
 
-        verify(repository).findAllByUserIdAndStatus(1L, 1);
+        PaymentMethodListPaginationDTO result = service.findAll(
+                1L,
+                null,
+                "all",
+                0,
+                10
+        );
+
+        assertEquals(1, result.paymentMethods().size());
+        assertEquals("method1", result.paymentMethods().getFirst().name());
+        assertFalse(Boolean.parseBoolean(result.paymentMethods().getFirst().isInstallment()));
+        assertEquals(1L, result.paymentMethods().getFirst().id());
+
+        verify(repository).findAllByUserIdAndStatus(
+                1L,
+                1,
+                PageRequest.of(0, 10)
+        );
     }
+
 
     @Test
     @DisplayName("Should return an empty list")
     void shouldReturnEmptyList() {
 
-        when(repository.findAllByUserIdAndStatus(1L, 1)).thenReturn(Optional.empty());
+        Page<PaymentMethod> page = new PageImpl<>(
+                List.of(),                 // lista vazia
+                PageRequest.of(0, 10),
+                0                          // totalElements
+        );
 
-        List<PaymentMethodDTO> result = service.findAll(1L);
+        when(repository.findAllByUserIdAndStatus(
+                1L,
+                1,
+                PageRequest.of(0, 10)
+        )).thenReturn(page);
 
-        assertEquals(0, result.size());
+        PaymentMethodListPaginationDTO result = service.findAll(
+                1L,
+                null,
+                "all",
+                0,
+                10
+        );
 
-        verify(repository).findAllByUserIdAndStatus(1L, 1);
+        assertNotNull(result.paymentMethods());
+        assertTrue(result.paymentMethods().isEmpty());
+        assertEquals(0, result.totalElements());
+        assertEquals(0, result.totalPages());
+
+        verify(repository).findAllByUserIdAndStatus(
+                1L,
+                1,
+                PageRequest.of(0, 10)
+        );
     }
+
 
     @Test
     @DisplayName("Should return a payment method by id")
@@ -75,7 +132,7 @@ class PaymentMethodServiceTest {
         PaymentMethodDTO result = service.findById(1L);
 
         assertEquals("method1", result.name());
-        assertEquals(false, result.is_installment());
+        assertEquals("false", result.isInstallment());
         assertEquals(1L, result.id());
 
         verify(repository).findByIdAndStatus(1L, 1);
@@ -111,7 +168,7 @@ class PaymentMethodServiceTest {
     @Test
     @DisplayName("Should create a payment method")
     void shouldCreatePaymentMethod() {
-        CreatePaymentMethodDTO data = new CreatePaymentMethodDTO("method1", false, 1L);
+        CreatePaymentMethodDTO data = new CreatePaymentMethodDTO("method1", "false", 1L);
         Users user = new Users(1L, "user", "user@email.com", "123456789", 1);
         PaymentMethod paymentMethod = new PaymentMethod(1L, "method1", false, 1, user, List.of());
 
@@ -122,7 +179,7 @@ class PaymentMethodServiceTest {
 
         assertEquals(1L, result.id());
         assertEquals(data.name(), result.name());
-        assertEquals(data.is_installment(), result.is_installment());
+        assertEquals(data.isInstallment(), result.isInstallment());
 
         verify(usersRepository).findById(1L);
         verify(repository).save(any(PaymentMethod.class));
@@ -133,7 +190,7 @@ class PaymentMethodServiceTest {
     void shouldUpdatePaymentMethod() {
         Users user = new Users(1L, "user", "user@email.com", "123456789", 1);
         PaymentMethod paymentMethod = new PaymentMethod(1L, "method1", false, 1, user, List.of());
-        PaymentMethodDTO data = new PaymentMethodDTO(1L, "method1 updated", false);
+        PaymentMethodDTO data = new PaymentMethodDTO(1L, "method1 updated", "false");
 
         when(repository.findById(1L)).thenReturn(Optional.of(paymentMethod));
 
@@ -141,7 +198,7 @@ class PaymentMethodServiceTest {
 
         assertEquals(data.id(), result.id());
         assertEquals(data.name(), result.name());
-        assertEquals(data.is_installment(), result.is_installment());
+        assertEquals(data.isInstallment(), result.isInstallment());
 
         verify(repository).findById(1L);
     }

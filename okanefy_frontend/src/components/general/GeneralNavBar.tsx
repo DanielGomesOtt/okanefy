@@ -12,7 +12,7 @@ import {
 } from "@heroui/react";
 import { LogoutIcon } from "../icons/LogoutIcon";
 import { AccountIcon } from "../icons/AccountIcon";
-import { useNavigate } from "react-router";
+import { href, useNavigate } from "react-router";
 
 const OkanefyLogo = () => {
   const navigate = useNavigate()
@@ -29,9 +29,10 @@ export default function GeneralNavBar() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const menuItems = [
-    { label: "Categorias", href: "/categorias" },
-    { label: "Formas de pagamentos", href: "#" },
-    { label: "Relatórios", href: "#" },
+    { label: "Geral", href: "/geral", className: location.pathname === "/geral" ? "font-bold underline text-blue-400" : ""},
+    { label: "Categorias", href: "/categorias", className: location.pathname === "/categorias" ? "font-bold underline text-blue-400" : "" },
+    { label: "Formas de pagamentos", href: "/formas_pagamento", className: location.pathname === "/formas_pagamento" ? "font-bold underline text-blue-400" : "" },
+    { label: "Relatórios", href: "#"},
     { label: "Conta", href: "/profile", icon: <AccountIcon /> },
     { label: "Logout", href: "#", icon: <LogoutIcon />, danger: true },
   ];
@@ -61,12 +62,17 @@ export default function GeneralNavBar() {
      
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
+          <Link color="foreground" href="/geral" className={location.pathname === "/geral" ? "font-bold underline text-blue-400" : ""}>
+            Geral
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
           <Link color="foreground" href="/categorias" className={location.pathname === "/categorias" ? "font-bold underline text-blue-400" : ""}>
             Categorias
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#">
+          <Link color="foreground" href="/formas_pagamento" className={location.pathname === "/formas_pagamento" ? "font-bold underline text-blue-400" : ""}>
             Formas de pagamentos
           </Link>
         </NavbarItem>
@@ -126,7 +132,7 @@ export default function GeneralNavBar() {
               </Button>
             ) : (
               <Link
-                className="w-full"
+                className={`w-full ${item.className}`}
                 color={item.danger ? "danger" : "foreground"}
                 href={item.href}
                 size="lg"

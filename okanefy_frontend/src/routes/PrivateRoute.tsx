@@ -2,16 +2,14 @@ import { JSX, useEffect, useState } from "react";
 import { Navigate } from "react-router";
 import { verifyToken } from "../utils/verifyToken";
 import { Progress } from "@heroui/react";
+import { BASE_URL } from "../utils/constants";
 
 export default function PrivateRoute({ children }: { children: JSX.Element }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const baseUrl = import.meta.env.VITE_API_BASE_URL.endsWith("/")
-    ? import.meta.env.VITE_API_BASE_URL
-    : import.meta.env.VITE_API_BASE_URL + "/";
 
   useEffect(() => {
     const checkAuth = async () => {
-      const valid = await verifyToken(baseUrl);
+      const valid = await verifyToken(BASE_URL);
       setIsAuthenticated(valid);
     };
     checkAuth();

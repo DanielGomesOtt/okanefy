@@ -22,7 +22,8 @@ public class PaymentMethod {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private boolean is_installment;
+    @Column(name = "is_installment")
+    private boolean isInstallment;
     private int status;
 
     @ManyToOne
@@ -35,7 +36,7 @@ public class PaymentMethod {
 
     public PaymentMethod(CreatePaymentMethodDTO data, Users user) {
         this.name = data.name();
-        this.is_installment = data.is_installment();
+        this.isInstallment = Boolean.parseBoolean(data.isInstallment());
         this.status = 1;
         this.user = user;
     }

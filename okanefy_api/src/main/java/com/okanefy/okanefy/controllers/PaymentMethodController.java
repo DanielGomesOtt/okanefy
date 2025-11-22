@@ -2,13 +2,12 @@ package com.okanefy.okanefy.controllers;
 
 import com.okanefy.okanefy.dto.paymentMethod.CreatePaymentMethodDTO;
 import com.okanefy.okanefy.dto.paymentMethod.PaymentMethodDTO;
+import com.okanefy.okanefy.dto.paymentMethod.PaymentMethodListPaginationDTO;
 import com.okanefy.okanefy.services.PaymentMethodService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/paymentMethod")
@@ -18,8 +17,13 @@ public class PaymentMethodController {
     private PaymentMethodService service;
 
     @GetMapping
-    public ResponseEntity<List<PaymentMethodDTO>> findAll(@RequestParam Long userId) {
-        return ResponseEntity.ok(service.findAll(userId));
+    public ResponseEntity<PaymentMethodListPaginationDTO> findAll(@RequestParam(required = true) Long userId,
+                                                                  @RequestParam(required = false) String name,
+                                                                  @RequestParam(required = false) String isInstallment,
+                                                                  @RequestParam(required = true) int page,
+                                                                  @RequestParam(required = true) int size) {
+
+        return ResponseEntity.ok(service.findAll(userId, name, isInstallment, page, size));
     }
 
     @GetMapping("/{id}")

@@ -1,8 +1,10 @@
 package com.okanefy.okanefy.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.okanefy.okanefy.dto.category.CategoriesListPaginationDTO;
 import com.okanefy.okanefy.dto.paymentMethod.CreatePaymentMethodDTO;
 import com.okanefy.okanefy.dto.paymentMethod.PaymentMethodDTO;
+import com.okanefy.okanefy.dto.paymentMethod.PaymentMethodListPaginationDTO;
 import com.okanefy.okanefy.models.PaymentMethod;
 import com.okanefy.okanefy.models.Users;
 import com.okanefy.okanefy.repositories.PaymentMethodRepository;
@@ -14,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,6 +24,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -56,27 +61,61 @@ class PaymentMethodControllerTest {
         PaymentMethod paymentMethod = new PaymentMethod(1L, "method1", false, 1, user, List.of());
         List<PaymentMethodDTO> paymentMethodsList = List.of(new PaymentMethodDTO(paymentMethod));
 
-        when(service.findAll(1L)).thenReturn(paymentMethodsList);
+        PaymentMethodListPaginationDTO paginationDTO = new PaymentMethodListPaginationDTO(
+                paymentMethodsList,
+                1L,
+                1,
+                0,
+                1,
+                10,
+                true,
+                true,
+                false,
+                PageRequest.of(0, 10)
+        );
+
+
+        when(service.findAll(eq(1L), any(), any(), eq(0), eq(10)))
+                .thenReturn(paginationDTO);
 
         mockMvc.perform(get("/paymentMethod")
-                        .param("userId", "1"))
+                        .param("userId", "1")
+                        .param("page", "0")
+                        .param("size", "10"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(paymentMethodsList.getFirst().id()))
-                .andExpect(jsonPath("$[0].name").value(paymentMethodsList.getFirst().name()))
-                .andExpect(jsonPath("$[0].is_installment").value(paymentMethodsList.getFirst().is_installment()));
+                .andExpect(jsonPath("$.paymentMethods[0].id").value(paymentMethodsList.getFirst().id()))
+                .andExpect(jsonPath("$.paymentMethods[0].name").value(paymentMethodsList.getFirst().name()))
+                .andExpect(jsonPath("$.paymentMethods[0].isInstallment").value(paymentMethodsList.getFirst().isInstallment()));
     }
+
 
     @Test
     @DisplayName("Should return an empty list")
     void shouldReturnEmptyList() throws Exception {
+        PaymentMethodListPaginationDTO paginationDTO = new PaymentMethodListPaginationDTO(
+                List.of(),
+                1L,
+                1,
+                0,
+                0,
+                10,
+                true,
+                true,
+                false,
+                PageRequest.of(0, 10));
 
-        when(service.findAll(1L)).thenReturn(List.of());
+
+        when(service.findAll(eq(1L), any(), any(), eq(0), eq(10)))
+                .thenReturn(paginationDTO);
 
         mockMvc.perform(get("/paymentMethod")
-                        .param("userId", "1"))
+                        .param("userId", "1")
+                        .param("page", "0")
+                        .param("size", "10"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(jsonPath("$.paymentMethods", hasSize(0)));
     }
+
 
     @Test
     @DisplayName("Should return a payment method")
@@ -91,7 +130,7 @@ class PaymentMethodControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(paymentMethodFormatted.id()))
                 .andExpect(jsonPath("$.name").value(paymentMethodFormatted.name()))
-                .andExpect(jsonPath("$.is_installment").value(paymentMethodFormatted.is_installment()));
+                .andExpect(jsonPath("$.isInstallment").value(paymentMethodFormatted.isInstallment()));
     }
 
     @Test
@@ -120,7 +159,7 @@ class PaymentMethodControllerTest {
         Users user = new Users(1L, "user", "user@email.com", "123456789", 1);
         PaymentMethod paymentMethod = new PaymentMethod(1L, "method1", false, 1, user, List.of());
         PaymentMethodDTO createdPaymentMethod = new PaymentMethodDTO(paymentMethod);
-        CreatePaymentMethodDTO data = new CreatePaymentMethodDTO("method1", false, 1L);
+        CreatePaymentMethodDTO data = new CreatePaymentMethodDTO("method1", "false", 1L);
         String requestBody = objectMapper.writeValueAsString(data);
 
         when(service.save(data)).thenReturn(createdPaymentMethod);
@@ -131,13 +170,13 @@ class PaymentMethodControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(createdPaymentMethod.id()))
                 .andExpect(jsonPath("$.name").value(createdPaymentMethod.name()))
-                .andExpect(jsonPath("$.is_installment").value(createdPaymentMethod.is_installment()));
+                .andExpect(jsonPath("$.isInstallment").value(createdPaymentMethod.isInstallment()));
     }
 
     @Test
     @DisplayName("Should update a payment method")
     void shouldUpdatePaymentMethod() throws Exception {
-        PaymentMethodDTO data = new PaymentMethodDTO(1L, "method updated", false);
+        PaymentMethodDTO data = new PaymentMethodDTO(1L, "method updated", "false");
         String requestBody = objectMapper.writeValueAsString(data);
 
         when(service.update(data)).thenReturn(data);
@@ -148,6 +187,6 @@ class PaymentMethodControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(data.id()))
                 .andExpect(jsonPath("$.name").value(data.name()))
-                .andExpect(jsonPath("$.is_installment").value(data.is_installment()));
+                .andExpect(jsonPath("$.isInstallment").value(data.isInstallment()));
     }
 }
