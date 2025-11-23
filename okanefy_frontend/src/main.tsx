@@ -11,6 +11,7 @@ import Profile from './pages/profile/Profile';
 import ForgotPassword from './pages/forgot_password/ForgotPassword';
 import Category from './pages/category/Category';
 import PaymentMethod from './pages/payment_method/PaymentMethod';
+import Transaction from './pages/transaction/Transaction';
 
 const rootElement = document.getElementById('root');
 
@@ -26,6 +27,7 @@ if (rootElement) {
                     <Route path='/profile' element={<PrivateRoute><Profile /></PrivateRoute>}/>
                     <Route path='/categorias' element={<PrivateRoute><Category /></PrivateRoute>}/>
                     <Route path='/formas_pagamento' element={<PrivateRoute><PaymentMethod /></PrivateRoute>}/>
+                    <Route path='/transacoes' element={<PrivateRoute><Transaction /></PrivateRoute>}/>
                 </Routes>
             </BrowserRouter>
         </HeroUIProvider>

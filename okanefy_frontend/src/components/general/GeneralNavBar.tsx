@@ -32,7 +32,7 @@ export default function GeneralNavBar() {
     { label: "Geral", href: "/geral", className: location.pathname === "/geral" ? "font-bold underline text-blue-400" : ""},
     { label: "Categorias", href: "/categorias", className: location.pathname === "/categorias" ? "font-bold underline text-blue-400" : "" },
     { label: "Formas de pagamentos", href: "/formas_pagamento", className: location.pathname === "/formas_pagamento" ? "font-bold underline text-blue-400" : "" },
-    { label: "Relatórios", href: "#"},
+    { label: "Transações", href: "/transacoes", className: location.pathname === "/transacoes" ? "font-bold underline text-blue-400" : "" },
     { label: "Conta", href: "/profile", icon: <AccountIcon /> },
     { label: "Logout", href: "#", icon: <LogoutIcon />, danger: true },
   ];
@@ -77,8 +77,8 @@ export default function GeneralNavBar() {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="#">
-            Relatórios
+          <Link color="foreground" href="/transacoes" className={location.pathname === "/transacoes" ? "font-bold underline text-blue-400" : ""}>
+            Transações
           </Link>
         </NavbarItem>
       </NavbarContent>
