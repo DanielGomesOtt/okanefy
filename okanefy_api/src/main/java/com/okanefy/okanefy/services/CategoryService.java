@@ -70,4 +70,9 @@ public class CategoryService {
                 categories.getSize(), categories.isFirst(), categories.isLast(), categories.hasNext(),
                 categories.nextOrLastPageable());
     }
+
+    public List<CategoriesListDTO> findAllWithoutPagination(Long userId) {
+        Optional<List<Category>> categories = repository.findAllByUserIdAndStatus(userId, 1);
+        return categories.map(categoryList -> categoryList.stream().map(CategoriesListDTO::new).toList()).orElseGet(List::of);
+    }
 }

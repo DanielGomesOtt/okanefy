@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
@@ -37,5 +39,10 @@ public class CategoryController {
                                                                @RequestParam(required = true) int page,
                                                                @RequestParam(required = true) int size) {
         return ResponseEntity.ok(service.findAll(userId, name, type, page, size));
+    }
+
+    @GetMapping("/transactions/{userId}")
+    public ResponseEntity<List<CategoriesListDTO>> findAllWithoutPagination(@PathVariable Long userId) {
+        return ResponseEntity.ok(service.findAllWithoutPagination(userId));
     }
 }

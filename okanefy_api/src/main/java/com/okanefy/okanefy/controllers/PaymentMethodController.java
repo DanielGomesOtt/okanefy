@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/paymentMethod")
 public class PaymentMethodController {
@@ -24,6 +26,11 @@ public class PaymentMethodController {
                                                                   @RequestParam(required = true) int size) {
 
         return ResponseEntity.ok(service.findAll(userId, name, isInstallment, page, size));
+    }
+
+    @GetMapping("/transactions/{userId}")
+    public ResponseEntity<List<PaymentMethodDTO>> findAllWithoutPagination(@PathVariable Long userId) {
+        return ResponseEntity.ok(service.findAllWithoutPagination(userId));
     }
 
     @GetMapping("/{id}")

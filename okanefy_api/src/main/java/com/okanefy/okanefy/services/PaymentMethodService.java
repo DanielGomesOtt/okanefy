@@ -1,6 +1,7 @@
 package com.okanefy.okanefy.services;
 
 
+import com.okanefy.okanefy.dto.category.CategoriesListDTO;
 import com.okanefy.okanefy.dto.paymentMethod.CreatePaymentMethodDTO;
 import com.okanefy.okanefy.dto.paymentMethod.PaymentMethodDTO;
 import com.okanefy.okanefy.dto.paymentMethod.PaymentMethodListPaginationDTO;
@@ -87,5 +88,10 @@ public class PaymentMethodService {
         }
 
         throw new PaymentMethodNotFoundException("Forma de pagamento não encontrada");
+    }
+
+    public List<PaymentMethodDTO> findAllWithoutPagination(Long userId) {
+        Optional<List<PaymentMethod>> paymentMethods = repository.findAllByUserIdAndStatus(userId, 1);
+        return paymentMethods.map(paymentMethodList -> paymentMethodList.stream().map(PaymentMethodDTO::new).toList()).orElseGet(List::of);
     }
 }

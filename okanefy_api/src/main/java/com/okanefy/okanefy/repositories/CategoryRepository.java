@@ -20,4 +20,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Page<Category> findAllByNameContainingIgnoreCaseAndUserIdAndStatus(String name, Long userId, int status, Pageable pageable);
 
     Page<Category> findAllByTypeAndUserIdAndStatus(CategoriesTypes type, Long userId, int status, Pageable pageable);
+
+    Optional<List<Category>> findAllByUserIdAndStatus(Long userId, int status);
 }

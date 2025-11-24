@@ -23,4 +23,6 @@ public interface PaymentMethodRepository extends JpaRepository<PaymentMethod, Lo
     Page<PaymentMethod> findAllByNameContainingIgnoreCaseAndUserIdAndStatus(String name, Long userId, int status, Pageable pageable);
 
     Page<PaymentMethod> findAllByIsInstallmentAndUserIdAndStatus(Boolean isInstallment, Long userId, int status, Pageable pageable);
+
+    Optional<List<PaymentMethod>> findAllByUserIdAndStatus(Long userId, int status);
 }

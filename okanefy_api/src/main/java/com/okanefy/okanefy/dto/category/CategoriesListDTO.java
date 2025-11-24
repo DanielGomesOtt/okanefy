@@ -12,4 +12,5 @@ public record CategoriesListDTO(
     public CategoriesListDTO(Category category) {
         this(category.getId(), category.getName(), category.getType().toString());
     }
+
 }
