@@ -38,7 +38,6 @@ function PaymentMethodMainContent() {
             if (nameParam) params.append('name', nameParam)
             if (isInstallmentParam) params.append('isInstallment', isInstallmentParam)
             
-            console.log(params.toString())
 
             const response = await fetch(`${BASE_URL}paymentMethod?${params}`, {
                 method: 'GET',
