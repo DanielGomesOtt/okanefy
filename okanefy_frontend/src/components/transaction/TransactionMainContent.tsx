@@ -197,7 +197,7 @@ function TransactionMainContent() {
                     }}/>
                 </CardFooter>
             </Card>
-            <CreateTransactionForm isOpen={isOpenCreateModal} setIsOpen={setIsOpenCreateModal} parentPaymentMethods={paymentMethods}/>
+            <CreateTransactionForm isOpen={isOpenCreateModal} setIsOpen={setIsOpenCreateModal} parentPaymentMethods={paymentMethods} parentCategories={categories}/>
         </div>
     )
 }
