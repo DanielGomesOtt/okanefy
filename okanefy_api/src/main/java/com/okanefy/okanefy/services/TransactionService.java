@@ -71,10 +71,10 @@ public class TransactionService {
     }
 
     public FindPageableTransactionsDTO findAll(Long userId, int page, int size, String initialDate, String endDate,
-                                               String description, String frequency, Long category_id) {
+                                               String description, String frequency, Long categoryId, Long paymentMethodId) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Transaction> transactions = repository.findAllWithFilters(userId, initialDate, endDate, description,
-                frequency, category_id, pageable);
+                frequency, categoryId, paymentMethodId, pageable);
         List<TransactionDTO> transactionDTOList = transactions.stream()
                 .map(transaction -> new TransactionDTO(
                         transaction.getId(),

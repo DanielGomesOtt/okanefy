@@ -21,6 +21,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
        AND (:description IS NULL OR LOWER(t.description) LIKE LOWER(CONCAT('%', :description, '%')))
        AND (:frequency IS NULL OR t.frequency = :frequency)
        AND (:category_id IS NULL OR t.category.id = :category_id)
+       AND (:payment_method_id IS NULL OR tpm.paymentMethod.id = :payment_method_id)
        """)
     Page<Transaction> findAllWithFilters(
             @Param("userId") Long userId,
@@ -29,6 +30,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             @Param("description") String description,
             @Param("frequency") String frequency,
             @Param("category_id") Long categoryId,
+            @Param("payment_method_id") Long paymentMethodId,
             Pageable pageable);
 
 }

@@ -44,6 +44,7 @@ function CreateTransactionForm({ isOpen, setIsOpen, parentPaymentMethods, parent
     const [installments, setInstallments] = useState(1)
     const [amount, setAmount] = useState("")
 
+
     
 
     function resetForm () {
@@ -146,10 +147,6 @@ function CreateTransactionForm({ isOpen, setIsOpen, parentPaymentMethods, parent
                 throw new Error(errorData.message || "Erro ao tentar criar a transação.")
             }
 
-            const data = await response.json()
-
-            console.log(data)
-
             setIsOpen(false)
 
         } catch (error: unknown){
@@ -161,6 +158,7 @@ function CreateTransactionForm({ isOpen, setIsOpen, parentPaymentMethods, parent
         }
     }
 
+     
     useEffect(() => {
         if (parentPaymentMethods.length > 0) {
             const first = parentPaymentMethods[0].id.toString();

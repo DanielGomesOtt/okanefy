@@ -34,6 +34,9 @@ function TransactionMainContent() {
     const [paymentMethod, setPaymentMethod] = useState<string>("all")
     const [frequency, setFrequency] = useState<string>("all")
     const [isOpenCreateModal, setIsOpenCreateModal] = useState(false)
+    const [description, setDescription] = useState("")
+    const [initialDate, setInitialDate] = useState("")
+    const [endDate, setEndDate] = useState("")
 
 
 
@@ -81,9 +84,48 @@ function TransactionMainContent() {
         }
     }
 
+    async function getTransactions(page: number = 1) {
+        try {
+            const params = new URLSearchParams({
+                userId: String(localStorage.getItem('id')),
+                page: String(page - 1),
+                size: '25',
+            })
+
+            if(category !== "all") params.append('categoryId', category)
+            if(paymentMethod !== "all") params.append('paymentMethodId', paymentMethod)
+            if(frequency !== "all") params.append('frequency', frequency)
+            if(description !== "") params.append('description', description)
+            if(initialDate !== "") params.append('initialDate', initialDate)
+            if(endDate !== "") params.append('endDate', endDate)
+                
+            const response = await fetch(`${BASE_URL}transactions?${params}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+
+            if (response.status !== 200) {
+                const errorData = await response.json()
+                throw new Error(errorData.message || "Erro ao tentar consultar as transações.")
+            }
+
+            const data = await response.json()
+            console.log(data)
+            
+        } catch (error) {
+            if(error instanceof Error) {
+                console.log(error.message)
+            }
+        }
+    }
+
     useEffect(() => {
         getPaymentMethods()
         getCategories()
+        getTransactions(1)
     }, [])
     
     return (
@@ -170,6 +212,7 @@ function TransactionMainContent() {
                                 <Button
                                     className="bg-primary text-white w-full"
                                     startContent={<FiSearch size={18} />}
+                                    onPress={() => getTransactions(1)}
                                 >
                                     Pesquisar
                                 </Button>
