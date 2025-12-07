@@ -21,9 +21,11 @@ interface CreateTransactionFormProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
   parentPaymentMethods: PaymentMethod[]
   parentCategories: Category[]
+  getTransactions: Function
+  currentPage: number
 }
 
-function CreateTransactionForm({ isOpen, setIsOpen, parentPaymentMethods, parentCategories }: CreateTransactionFormProps) {
+function CreateTransactionForm({ isOpen, setIsOpen, parentPaymentMethods, parentCategories, getTransactions, currentPage }: CreateTransactionFormProps) {
 
     const typeFrequency = [
         {key: 'none', name: 'Não frequente'},
@@ -148,7 +150,8 @@ function CreateTransactionForm({ isOpen, setIsOpen, parentPaymentMethods, parent
             }
 
             setIsOpen(false)
-
+            resetForm()
+            getTransactions(currentPage)
         } catch (error: unknown){
             if (error instanceof Error) {
                 setErrorMessage(error.message)

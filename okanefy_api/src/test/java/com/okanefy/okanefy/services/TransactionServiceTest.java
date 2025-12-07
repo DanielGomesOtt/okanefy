@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -104,11 +104,22 @@ class TransactionServiceTest {
         List<Transaction> transactions = List.of(transaction);
         Page<Transaction> transactionPage = new PageImpl<>(transactions, pageable, transactions.size());
 
-        when(repository.findAllWithFilters(1L, null, null, null, null,
-                null, pageable)).thenReturn(transactionPage);
+        when(repository.findAllWithFilters(
+                eq(1L),
+                isNull(),
+                isNull(),
+                isNull(),
+                isNull(),
+                isNull(),
+                isNull(),
+                eq(pageable)
+        )).thenReturn(transactionPage);
 
-        FindPageableTransactionsDTO result = service.findAll(1L, 0, 5, null, null,
-                null, null, null);
+
+        FindPageableTransactionsDTO result = service.findAll(
+                1L, 0, 5, null, null,
+                null, null, null, null
+        );
 
         assertNotNull(result);
         assertNotNull(result.transactions());
@@ -117,8 +128,17 @@ class TransactionServiceTest {
         assertEquals(1, result.totalElements());
         assertEquals(1, result.totalPages());
 
-        verify(repository).findAllWithFilters(1L, null, null, null, null,
-                null, pageable);
+        verify(repository).findAllWithFilters(
+                eq(1L),
+                isNull(),
+                isNull(),
+                isNull(),
+                isNull(),
+                isNull(),
+                isNull(),
+                eq(pageable)
+        );
+
     }
 
     @Test

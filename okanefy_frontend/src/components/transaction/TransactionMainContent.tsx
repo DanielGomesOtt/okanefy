@@ -1,8 +1,9 @@
-import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Form, Input, Pagination, Select, SelectItem } from '@heroui/react';
+import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Form, Input, Pagination, Select, SelectItem, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@heroui/react';
 import { useEffect, useState } from 'react'
 import { BASE_URL } from '../../utils/constants';
-import { FiPlus, FiSearch } from 'react-icons/fi';
+import { FiEdit2, FiPlus, FiSearch, FiTrash2 } from 'react-icons/fi';
 import CreateTransactionForm from './CreateTransactionForm';
+import formatDate from '../../utils/formatDate';
 
 function TransactionMainContent() {
 
@@ -16,6 +17,16 @@ function TransactionMainContent() {
         id: number
         name: string
         isInstallment: string
+    }
+
+    interface Transaction {
+        id: number
+        description: string
+        initial_date: string
+        end_date: string
+        amount: number
+        installment: number
+        frequency: string
     }
 
     const typeFrequency = [
@@ -37,6 +48,7 @@ function TransactionMainContent() {
     const [description, setDescription] = useState("")
     const [initialDate, setInitialDate] = useState("")
     const [endDate, setEndDate] = useState("")
+    const [transactions, setTransactions] = useState<Transaction[]>([])
 
 
 
@@ -113,7 +125,8 @@ function TransactionMainContent() {
             }
 
             const data = await response.json()
-            console.log(data)
+        
+            setTransactions(data.transactions)
             
         } catch (error) {
             if(error instanceof Error) {
@@ -143,6 +156,7 @@ function TransactionMainContent() {
                                     name="initial_date_input"
                                     type="date"
                                     label="Data inicial"
+                                    onChange={(e) => setInitialDate(e.target.value)}
                                 />
 
                                 <Input
@@ -150,6 +164,7 @@ function TransactionMainContent() {
                                     name="end_date_input"
                                     type="date"
                                     label="Data final"
+                                    onChange={(e) => setEndDate(e.target.value)}
                                 />
 
                                 <Input
@@ -158,12 +173,17 @@ function TransactionMainContent() {
                                     type="text"
                                     placeholder='Pesquisar por descrição'
                                     label="Descrição"
+                                    onChange={(e) => setDescription(e.target.value)}
                                 />
 
                                 <Select
                                     label="Frequência"
                                     className="w-full lg:w-1/4"
                                     selectedKeys={[frequency]}
+                                    onSelectionChange={(keys) => {
+                                        const key = Array.from(keys)[0];
+                                        setFrequency(key.toString());
+                                    }}
                                 >
                                     <SelectItem key="all">Todas</SelectItem>
                                     <>
@@ -180,6 +200,10 @@ function TransactionMainContent() {
                                     label="Categoria"
                                     className="w-full lg:w-1/4"
                                     selectedKeys={[category]}
+                                    onSelectionChange={(keys) => {
+                                        const key = Array.from(keys)[0];
+                                        setCategory(key.toString());
+                                    }}
                                 >
                                     <SelectItem key="all">Todas</SelectItem>
                                     
@@ -195,6 +219,10 @@ function TransactionMainContent() {
                                     label="Forma de pagamento"
                                     className="w-full lg:w-1/4"
                                     selectedKeys={[paymentMethod]}
+                                    onSelectionChange={(keys) => {
+                                        const key = Array.from(keys)[0];
+                                        setPaymentMethod(key.toString());
+                                    }}
                                 >
                                     <SelectItem key="all">Todas</SelectItem>
 
@@ -230,7 +258,92 @@ function TransactionMainContent() {
                 </CardHeader>
                 <Divider />
                 <CardBody>
-                    
+                    <Table aria-labelledby='Tabela de formaa de pagamento'>
+                        <TableHeader>
+                            <TableColumn key="id" className='text-bold text-blue-500 text-center'>ID</TableColumn>
+                            <TableColumn key="description" className='text-bold text-blue-500 text-center'>Descrição</TableColumn>
+                            <TableColumn key="initial_date" className='text-bold text-blue-500 text-center'>Data inicial</TableColumn>
+                            <TableColumn key="end_date" className='text-bold text-blue-500 text-center'>Data final</TableColumn>
+                            <TableColumn key="installments" className='text-bold text-blue-500 text-center'>Parcelas</TableColumn>
+                            <TableColumn key="frequency" className='text-bold text-blue-500 text-center'>Frequência</TableColumn>
+                            <TableColumn key="amount" className='text-bold text-blue-500 text-center'>Valor</TableColumn>
+                            <TableColumn key="payments" className='text-bold text-blue-500 text-center'>Pagamentos</TableColumn>
+                            <TableColumn key="edit" className='text-bold text-blue-500 text-center'>Editar</TableColumn>
+                            <TableColumn key="delete" className='text-bold text-blue-500 text-center'>Excluir</TableColumn>
+                        </TableHeader>
+
+                        <TableBody items={transactions}>
+                            {(item: any) => (
+                                <TableRow key={item.id}>
+                                    <TableCell className="text-center">{item.id}</TableCell>
+                                    <TableCell className="text-center">{item.description}</TableCell>
+                                    <TableCell className="text-center">
+                                        {formatDate(item.initial_date)}
+                                    </TableCell>
+
+                                    <TableCell className="text-center">
+                                        {formatDate(item.end_date)}
+                                    </TableCell>
+                                    <TableCell className="text-center">{item.number_installments}</TableCell>
+                                    <TableCell className="text-center">
+                                        {typeFrequency.find(f => f.key === item.frequency)?.name || "—"}
+                                    </TableCell>
+
+                                    <TableCell className="text-center">R$ {String(item.amount.toFixed(2)).replace(".", ",")}</TableCell>
+
+                                    <TableCell className="flex justify-center w-full">
+                                        <Select
+                                            selectedKeys={item.payment_methods?.map((pm: any) => String(pm.payment_method_id)) || []}
+                                            selectionMode="multiple"
+                                            className="w-40"
+                                            aria-label='payments_method_select'
+                                        >
+                                            {item.payment_methods?.map((pm: any) => {
+                                                const method = paymentMethods.find(m => m.id === pm.payment_method_id)
+
+                                                return (
+                                                    <SelectItem key={pm.payment_method_id}>
+                                                        {method ? method.name : `ID ${pm.payment_method_id}`}
+                                                    </SelectItem>
+                                                )
+                                            })}
+                                        </Select>
+                                    </TableCell>
+
+
+                                    <TableCell className="text-center">
+                                        <Button
+                                            isIconOnly
+                                            size="sm"
+                                            color="primary"
+                                            variant="bordered"
+                                            className="transition-all duration-200 hover:bg-primary hover:text-white"
+                                            onPress={() => {
+                                                
+                                            }}
+                                        >
+                                            <FiEdit2 className="w-4 h-4" />
+                                        </Button>
+                                    </TableCell>
+
+                                    <TableCell className="text-center">
+                                        <Button
+                                            isIconOnly
+                                            size="sm"
+                                            color="danger"
+                                            variant="bordered"
+                                            className="transition-all duration-200 hover:bg-danger hover:variant-solid hover:text-white"
+                                            onPress={() => {
+                                                
+                                            }}
+                                        >
+                                            <FiTrash2 className="w-4 h-4" />
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
                 </CardBody>
                 <Divider />
                 <CardFooter className='flex justify-center'>
@@ -240,7 +353,7 @@ function TransactionMainContent() {
                     }}/>
                 </CardFooter>
             </Card>
-            <CreateTransactionForm isOpen={isOpenCreateModal} setIsOpen={setIsOpenCreateModal} parentPaymentMethods={paymentMethods} parentCategories={categories}/>
+            <CreateTransactionForm isOpen={isOpenCreateModal} setIsOpen={setIsOpenCreateModal} parentPaymentMethods={paymentMethods} parentCategories={categories} getTransactions={getTransactions} currentPage={currentPage}/>
         </div>
     )
 }

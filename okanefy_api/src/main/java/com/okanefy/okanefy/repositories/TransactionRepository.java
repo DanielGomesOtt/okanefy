@@ -1,5 +1,6 @@
 package com.okanefy.okanefy.repositories;
 
+import com.okanefy.okanefy.enums.TransactionFrequency;
 import com.okanefy.okanefy.models.Transaction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +29,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             @Param("initialDate") String initialDate,
             @Param("endDate") String endDate,
             @Param("description") String description,
-            @Param("frequency") String frequency,
+            @Param("frequency") TransactionFrequency frequency,
             @Param("category_id") Long categoryId,
             @Param("payment_method_id") Long paymentMethodId,
             Pageable pageable);

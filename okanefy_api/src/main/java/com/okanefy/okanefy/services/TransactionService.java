@@ -6,7 +6,6 @@ import com.okanefy.okanefy.enums.TransactionFrequency;
 import com.okanefy.okanefy.models.*;
 import com.okanefy.okanefy.repositories.*;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -73,8 +72,22 @@ public class TransactionService {
     public FindPageableTransactionsDTO findAll(Long userId, int page, int size, String initialDate, String endDate,
                                                String description, String frequency, Long categoryId, Long paymentMethodId) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Transaction> transactions = repository.findAllWithFilters(userId, initialDate, endDate, description,
-                frequency, categoryId, paymentMethodId, pageable);
+        TransactionFrequency freqEnum = null;
+
+        if (frequency != null && !frequency.isBlank()) {
+            freqEnum = TransactionFrequency.valueOf(frequency);
+        }
+
+        Page<Transaction> transactions = repository.findAllWithFilters(
+                userId,
+                initialDate,
+                endDate,
+                description,
+                freqEnum,
+                categoryId,
+                paymentMethodId,
+                pageable
+        );
         List<TransactionDTO> transactionDTOList = transactions.stream()
                 .map(transaction -> new TransactionDTO(
                         transaction.getId(),
