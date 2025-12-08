@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Form, Input, Pagination, Select, SelectItem, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@heroui/react';
+import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Form, Input, Modal, ModalBody, ModalContent, Pagination, Select, SelectItem, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@heroui/react';
 import { useEffect, useState } from 'react'
 import { BASE_URL } from '../../utils/constants';
 import { FiEdit2, FiPlus, FiSearch, FiTrash2 } from 'react-icons/fi';
@@ -45,10 +45,12 @@ function TransactionMainContent() {
     const [paymentMethod, setPaymentMethod] = useState<string>("all")
     const [frequency, setFrequency] = useState<string>("all")
     const [isOpenCreateModal, setIsOpenCreateModal] = useState(false)
+    const [isOpenDeleteConfirmModal, setIsOpenDeleteConfirmModal] = useState(false)
     const [description, setDescription] = useState("")
     const [initialDate, setInitialDate] = useState("")
     const [endDate, setEndDate] = useState("")
     const [transactions, setTransactions] = useState<Transaction[]>([])
+    const [deletedTransaction, setDeletedTransaction] = useState(0)
 
 
 
@@ -131,6 +133,33 @@ function TransactionMainContent() {
         } catch (error) {
             if(error instanceof Error) {
                 console.log(error.message)
+            }
+        }
+    }
+
+    async function deleteTransaction() {
+        try {
+            const response = await fetch(`${BASE_URL}transactions/${deletedTransaction}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+
+            if(response.status !== 204) {
+                const errorData = await response.json()
+                throw new Error(errorData.message || "Erro ao tentar deletar transação.")
+            }
+
+            getTransactions(currentPage)
+            setIsOpenDeleteConfirmModal(false)
+            setDeletedTransaction(0)
+        } catch (error: unknown) {
+            if(error instanceof Error) {
+                console.log(error.message)
+            } else {
+                console.log(error)
             }
         }
     }
@@ -258,7 +287,7 @@ function TransactionMainContent() {
                 </CardHeader>
                 <Divider />
                 <CardBody>
-                    <Table aria-labelledby='Tabela de formaa de pagamento'>
+                    <Table aria-labelledby='Tabela de transações'>
                         <TableHeader>
                             <TableColumn key="id" className='text-bold text-blue-500 text-center'>ID</TableColumn>
                             <TableColumn key="description" className='text-bold text-blue-500 text-center'>Descrição</TableColumn>
@@ -334,7 +363,8 @@ function TransactionMainContent() {
                                             variant="bordered"
                                             className="transition-all duration-200 hover:bg-danger hover:variant-solid hover:text-white"
                                             onPress={() => {
-                                                
+                                                setDeletedTransaction(item.id)
+                                                setIsOpenDeleteConfirmModal(true)
                                             }}
                                         >
                                             <FiTrash2 className="w-4 h-4" />
@@ -353,6 +383,24 @@ function TransactionMainContent() {
                     }}/>
                 </CardFooter>
             </Card>
+            <Modal isOpen={isOpenDeleteConfirmModal} onOpenChange={setIsOpenDeleteConfirmModal} hideCloseButton>
+                <ModalContent>
+                    {() => (
+                        <>
+                            <ModalBody className="text-center">
+                            <h3 className="text-xl font-bold">
+                                Você tem certeza que deseja excluir essa transação?
+                            </h3>
+
+                            <div className="flex justify-around">
+                                <Button className="bg-green-500 text-white p-5" onPress={deleteTransaction}>Confirmar</Button>
+                                <Button className="bg-red-500 text-white p-5" onPress={() => setIsOpenDeleteConfirmModal(false)}>Cancelar</Button>
+                            </div>
+                            </ModalBody>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
             <CreateTransactionForm isOpen={isOpenCreateModal} setIsOpen={setIsOpenCreateModal} parentPaymentMethods={paymentMethods} parentCategories={categories} getTransactions={getTransactions} currentPage={currentPage}/>
         </div>
     )
