@@ -4,6 +4,7 @@ import { BASE_URL } from '../../utils/constants';
 import { FiEdit2, FiPlus, FiSearch, FiTrash2 } from 'react-icons/fi';
 import CreateTransactionForm from './CreateTransactionForm';
 import formatDate from '../../utils/formatDate';
+import UpdateTransactionForm from './UpdateTransactionForm';
 
 function TransactionMainContent() {
 
@@ -11,6 +12,11 @@ function TransactionMainContent() {
         id: number
         name: string
         type: string
+    }
+
+    interface TransactionPaymentMethod {
+        id: number
+        payment_method_id: number
     }
 
     interface PaymentMethod {
@@ -29,6 +35,17 @@ function TransactionMainContent() {
         frequency: string
     }
 
+    interface TransactionEdit {
+        id: number,
+        description: string,
+        initial_date: string,
+        frequency: string,
+        category_id: number,
+        installments: number,
+        amount: string,
+        payment_methods: TransactionPaymentMethod[]
+    }
+
     const typeFrequency = [
         {key: 'none', name: 'Nao frequente'},
         {key: 'daily', name: 'Diario'},
@@ -45,14 +62,37 @@ function TransactionMainContent() {
     const [paymentMethod, setPaymentMethod] = useState<string>("all")
     const [frequency, setFrequency] = useState<string>("all")
     const [isOpenCreateModal, setIsOpenCreateModal] = useState(false)
+    const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false)
     const [isOpenDeleteConfirmModal, setIsOpenDeleteConfirmModal] = useState(false)
     const [description, setDescription] = useState("")
     const [initialDate, setInitialDate] = useState("")
     const [endDate, setEndDate] = useState("")
     const [transactions, setTransactions] = useState<Transaction[]>([])
     const [deletedTransaction, setDeletedTransaction] = useState(0)
+    const [updatedTransaction, setUpdatedTransaction] = useState(0)
+    const [transactionEditData, setTransactionEditData] = useState<TransactionEdit | null>(null)
 
 
+
+    function formatTransactionEditData(data: any) {
+        const transaction = {
+            id: data.id,
+            description: data.description,
+            initial_date: data.initial_date,
+            frequency: data.frequency,
+            category_id: data.category_id,
+            installments: data.number_installments,
+            amount: data.amount,
+            payment_methods: data.payment_methods.map(
+                (item: { id: any; payment_method_id: any }) => ({
+                    id: item.id,
+                    payment_method_id: item.payment_method_id
+                })
+            )
+        }
+
+        setTransactionEditData(transaction)
+    }
 
     async function getPaymentMethods() {
         try {
@@ -127,7 +167,6 @@ function TransactionMainContent() {
             }
 
             const data = await response.json()
-        
             setTransactions(data.transactions)
             
         } catch (error) {
@@ -348,7 +387,9 @@ function TransactionMainContent() {
                                             variant="bordered"
                                             className="transition-all duration-200 hover:bg-primary hover:text-white"
                                             onPress={() => {
-                                                
+                                                formatTransactionEditData(item)
+                                                setUpdatedTransaction(item.id)
+                                                setIsOpenUpdateModal(true)
                                             }}
                                         >
                                             <FiEdit2 className="w-4 h-4" />
@@ -402,6 +443,8 @@ function TransactionMainContent() {
                 </ModalContent>
             </Modal>
             <CreateTransactionForm isOpen={isOpenCreateModal} setIsOpen={setIsOpenCreateModal} parentPaymentMethods={paymentMethods} parentCategories={categories} getTransactions={getTransactions} currentPage={currentPage}/>
+            <UpdateTransactionForm isOpen={isOpenUpdateModal} setIsOpen={setIsOpenUpdateModal} parentPaymentMethods={paymentMethods} parentCategories={categories} getTransactions={getTransactions} currentPage={currentPage} 
+            updatedTransaction={updatedTransaction} setUpdatedTransaction={setUpdatedTransaction} transactionEditData={transactionEditData}/>
         </div>
     )
 }
