@@ -1,5 +1,6 @@
 package com.okanefy.okanefy.repositories;
 
+import com.okanefy.okanefy.enums.CategoriesTypes;
 import com.okanefy.okanefy.enums.TransactionFrequency;
 import com.okanefy.okanefy.models.Transaction;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
        AND (:description IS NULL OR LOWER(t.description) LIKE LOWER(CONCAT('%', :description, '%')))
        AND (:frequency IS NULL OR t.frequency = :frequency)
        AND (:category_id IS NULL OR t.category.id = :category_id)
+       AND (:category_type IS NULL OR t.category.type = :category_type)
        AND (:payment_method_id IS NULL OR tpm.paymentMethod.id = :payment_method_id)
        """)
     Page<Transaction> findAllWithFilters(
@@ -31,6 +33,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             @Param("description") String description,
             @Param("frequency") TransactionFrequency frequency,
             @Param("category_id") Long categoryId,
+            @Param("category_type") CategoriesTypes categoryType,
             @Param("payment_method_id") Long paymentMethodId,
             Pageable pageable);
 

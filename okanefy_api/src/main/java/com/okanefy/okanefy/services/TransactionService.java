@@ -2,6 +2,7 @@ package com.okanefy.okanefy.services;
 
 import com.okanefy.okanefy.dto.transactions.*;
 import com.okanefy.okanefy.dto.transactions_payment_method.TransactionPaymentMethodDTO;
+import com.okanefy.okanefy.enums.CategoriesTypes;
 import com.okanefy.okanefy.enums.TransactionFrequency;
 import com.okanefy.okanefy.models.*;
 import com.okanefy.okanefy.repositories.*;
@@ -70,12 +71,17 @@ public class TransactionService {
     }
 
     public FindPageableTransactionsDTO findAll(Long userId, int page, int size, String initialDate, String endDate,
-                                               String description, String frequency, Long categoryId, Long paymentMethodId) {
+                                               String description, String frequency, Long categoryId, Long paymentMethodId, String categoryType) {
         Pageable pageable = PageRequest.of(page, size);
         TransactionFrequency freqEnum = null;
+        CategoriesTypes categoryTypeEnum = null;
 
         if (frequency != null && !frequency.isBlank()) {
             freqEnum = TransactionFrequency.valueOf(frequency);
+        }
+
+        if(categoryType != null && !categoryType.isBlank()) {
+            categoryTypeEnum = CategoriesTypes.valueOf(categoryType);
         }
 
         Page<Transaction> transactions = repository.findAllWithFilters(
@@ -85,6 +91,7 @@ public class TransactionService {
                 description,
                 freqEnum,
                 categoryId,
+                categoryTypeEnum,
                 paymentMethodId,
                 pageable
         );
@@ -98,6 +105,7 @@ public class TransactionService {
                         transaction.getNumber_installments(),
                         transaction.getFrequency().name(),
                         transaction.getCategory().getId(),
+                        transaction.getCategory().getType().toString(),
                         transaction.getTransactionPaymentMethods().stream()
                                 .map(tpm -> new TransactionPaymentMethodDTO(
                                         tpm.getId(),
@@ -126,7 +134,8 @@ public class TransactionService {
             return new TransactionDTO(transaction.get().getId(), transaction.get().getInitial_date(),
                     transaction.get().getEnd_date(), transaction.get().getAmount(), transaction.get().getDescription(),
                     transaction.get().getNumber_installments(), transaction.get().getFrequency().name(),
-                    transaction.get().getCategory().getId(), transactionsPaymentMethod);
+                    transaction.get().getCategory().getId(), transaction.get().getCategory().getType().toString(),
+                    transactionsPaymentMethod);
         }
 
         return null;
@@ -177,7 +186,8 @@ public class TransactionService {
             return new TransactionDTO(transaction.get().getId(), transaction.get().getInitial_date(),
                     transaction.get().getEnd_date(), transaction.get().getAmount(), transaction.get().getDescription(),
                     transaction.get().getNumber_installments(), transaction.get().getFrequency().name(),
-                    transaction.get().getCategory().getId(), transactionsPaymentMethod);
+                    transaction.get().getCategory().getId(), transaction.get().getCategory().getType().toString(),
+                    transactionsPaymentMethod);
         }
 
         return null;

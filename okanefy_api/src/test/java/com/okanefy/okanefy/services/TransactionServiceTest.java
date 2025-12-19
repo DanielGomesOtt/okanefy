@@ -112,13 +112,14 @@ class TransactionServiceTest {
                 isNull(),
                 isNull(),
                 isNull(),
+                isNull(),
                 eq(pageable)
         )).thenReturn(transactionPage);
 
 
         FindPageableTransactionsDTO result = service.findAll(
                 1L, 0, 5, null, null,
-                null, null, null, null
+                null, null, null, null, null
         );
 
         assertNotNull(result);
@@ -130,6 +131,7 @@ class TransactionServiceTest {
 
         verify(repository).findAllWithFilters(
                 eq(1L),
+                isNull(),
                 isNull(),
                 isNull(),
                 isNull(),

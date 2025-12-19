@@ -13,6 +13,7 @@ public record TransactionDTO(
         int number_installments,
         String frequency,
         Long category_id,
+        String category_type,
         List<TransactionPaymentMethodDTO> payment_methods
 ) {
 }

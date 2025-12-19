@@ -1,7 +1,7 @@
 import { Button, Card, CardBody, CardFooter, CardHeader, Divider, Form, Input, Modal, ModalBody, ModalContent, Pagination, Select, SelectItem, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@heroui/react';
 import { useEffect, useState } from 'react'
 import { BASE_URL } from '../../utils/constants';
-import { FiEdit2, FiPlus, FiSearch, FiTrash2 } from 'react-icons/fi';
+import { FiArrowDown, FiArrowUp, FiEdit2, FiPlus, FiSearch, FiTrash2 } from 'react-icons/fi';
 import CreateTransactionForm from './CreateTransactionForm';
 import formatDate from '../../utils/formatDate';
 import UpdateTransactionForm from './UpdateTransactionForm';
@@ -61,6 +61,7 @@ function TransactionMainContent() {
     const [category, setCategory] = useState<string>("all")
     const [paymentMethod, setPaymentMethod] = useState<string>("all")
     const [frequency, setFrequency] = useState<string>("all")
+    const [movement, setMovement] = useState<string>("all")
     const [isOpenCreateModal, setIsOpenCreateModal] = useState(false)
     const [isOpenUpdateModal, setIsOpenUpdateModal] = useState(false)
     const [isOpenDeleteConfirmModal, setIsOpenDeleteConfirmModal] = useState(false)
@@ -149,6 +150,7 @@ function TransactionMainContent() {
             if(category !== "all") params.append('categoryId', category)
             if(paymentMethod !== "all") params.append('paymentMethodId', paymentMethod)
             if(frequency !== "all") params.append('frequency', frequency)
+            if(movement !== "all") params.append('categoryType', movement)
             if(description !== "") params.append('description', description)
             if(initialDate !== "") params.append('initialDate', initialDate)
             if(endDate !== "") params.append('endDate', endDate)
@@ -218,7 +220,17 @@ function TransactionMainContent() {
                             <span className='text-center text-red-500'>{errorMessage}</span>
                         </div>
                         <div className="w-full flex flex-wrap lg:flex-nowrap justify-center">
-                            <div className="flex flex-wrap justify-center items-center gap-2 w-full lg:w-4/4">
+                            <div className="flex flex-wrap justify-center items-center gap-3 w-full lg:w-4/4">
+
+                                <Input
+                                    className="w-full lg:w-3/4"
+                                    name="description_input"
+                                    type="text"
+                                    placeholder='Pesquisar por descrição'
+                                    label="Descrição"
+                                    onChange={(e) => setDescription(e.target.value)}
+                                />
+
                                 <Input
                                     className="w-full lg:w-1/4"
                                     name="initial_date_input"
@@ -235,14 +247,20 @@ function TransactionMainContent() {
                                     onChange={(e) => setEndDate(e.target.value)}
                                 />
 
-                                <Input
+                                <Select
+                                    label="Movimentação"
                                     className="w-full lg:w-1/4"
-                                    name="description_input"
-                                    type="text"
-                                    placeholder='Pesquisar por descrição'
-                                    label="Descrição"
-                                    onChange={(e) => setDescription(e.target.value)}
-                                />
+                                    selectedKeys={[movement]}
+                                    onSelectionChange={(keys) => {
+                                        const key = Array.from(keys)[0];
+                                        setMovement(key.toString());
+                                    }}
+                                >
+                                    <SelectItem key="all">Todas</SelectItem>
+                                    <SelectItem key="EXPENSE">Gasto</SelectItem>
+                                    <SelectItem key="INCOME">Renda</SelectItem>
+
+                                </Select>
 
                                 <Select
                                     label="Frequência"
@@ -343,7 +361,24 @@ function TransactionMainContent() {
                         <TableBody items={transactions}>
                             {(item: any) => (
                                 <TableRow key={item.id}>
-                                    <TableCell className="text-center">{item.id}</TableCell>
+                                    <TableCell className="text-center">
+                                        {item.category_type === "EXPENSE" ? (
+                                            <>
+                                                <div className='flex gap-2'>
+                                                    <FiArrowDown className="w-4 h-6 text-red-500" />
+                                                    {item.id}
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className='flex gap-2'>
+                                                    <FiArrowUp className="w-4 h-6 text-green-500" />
+                                                    {item.id}
+                                                </div>
+                                            </>
+                                        )}
+                                    </TableCell>
+
                                     <TableCell className="text-center">{item.description}</TableCell>
                                     <TableCell className="text-center">
                                         {formatDate(item.initial_date)}

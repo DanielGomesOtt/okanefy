@@ -29,9 +29,10 @@ public class TransactionController {
                                                         @RequestParam(required = false) String description,
                                                         @RequestParam(required = false) String frequency,
                                                         @RequestParam(required = false) Long categoryId,
-                                                        @RequestParam(required = false) Long paymentMethodId) {
+                                                        @RequestParam(required = false) Long paymentMethodId,
+                                                        @RequestParam(required = false) String categoryType) {
         return ResponseEntity.ok(service.findAll(userId, page, size, initialDate, endDate, description,
-                frequency, categoryId, paymentMethodId));
+                frequency, categoryId, paymentMethodId, categoryType));
     }
 
 
