@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/transactions")
 public class TransactionController {
@@ -35,6 +37,12 @@ public class TransactionController {
                 frequency, categoryId, paymentMethodId, categoryType));
     }
 
+    @GetMapping("/general")
+    public ResponseEntity<List<TransactionDTO>> findAllWithoutPagination(@RequestParam(required = true) Long userId,
+                                                                         @RequestParam(required = false) String initialDate,
+                                                                         @RequestParam(required = false) String endDate) {
+        return ResponseEntity.ok(service.findAllWithoutPagination(userId, initialDate, endDate));
+    }
 
     @GetMapping("/{transactionId}")
     public ResponseEntity<TransactionDTO> findById(@PathVariable(required = true) Long transactionId) {

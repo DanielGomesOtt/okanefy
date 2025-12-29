@@ -10,6 +10,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
     @Query("""
@@ -37,4 +40,17 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             @Param("payment_method_id") Long paymentMethodId,
             Pageable pageable);
 
+    @Query("""
+       SELECT DISTINCT t FROM Transaction t
+       JOIN FETCH t.transactionPaymentMethods tpm
+       WHERE t.user.id = :userId
+       AND t.status = 1
+       AND tpm.status = 1
+       AND (:initialDate IS NULL OR t.initial_date >= :initialDate)
+       AND (:endDate IS NULL OR t.end_date <= :endDate)
+       """)
+    Optional<List<Transaction>> findAllWithFiltersWithoutPagination(
+            @Param("userId")Long userId,
+            @Param("initialDate") String initialDate,
+            @Param("endDate") String endDate);
 }

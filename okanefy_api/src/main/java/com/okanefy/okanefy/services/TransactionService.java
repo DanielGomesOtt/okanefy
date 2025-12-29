@@ -192,4 +192,35 @@ public class TransactionService {
 
         return null;
     }
+
+    public List<TransactionDTO> findAllWithoutPagination(Long userId, String initialDate, String endDate) {
+
+
+        Optional<List<Transaction>> transactions = repository.findAllWithFiltersWithoutPagination(
+                userId,
+                initialDate,
+                endDate
+        );
+
+        return transactions.map(transactionList -> transactionList.stream()
+                .map(transaction -> new TransactionDTO(
+                        transaction.getId(),
+                        transaction.getInitial_date(),
+                        transaction.getEnd_date(),
+                        transaction.getAmount(),
+                        transaction.getDescription(),
+                        transaction.getNumber_installments(),
+                        transaction.getFrequency().name(),
+                        transaction.getCategory().getId(),
+                        transaction.getCategory().getType().toString(),
+                        transaction.getTransactionPaymentMethods().stream()
+                                .map(tpm -> new TransactionPaymentMethodDTO(
+                                        tpm.getId(),
+                                        tpm.getPaymentMethod().getId()
+                                ))
+                                .toList()
+                ))
+                .toList()).orElseGet(List::of);
+
+    }
 }
