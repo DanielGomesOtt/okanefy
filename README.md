@@ -47,6 +47,7 @@ Access the application at:
 👉 http://localhost:5173
 
 ### Project Structure
+```text
 okanefy/
 ├── okanefy_api/
 │   └── README.md
@@ -54,6 +55,7 @@ okanefy/
 │   └── README.md
 ├── docker-compose.yml
 └── README.md
+```
 
 
 ### Project Status
