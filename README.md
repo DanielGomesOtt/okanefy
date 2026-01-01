@@ -57,6 +57,10 @@ okanefy/
 └── README.md
 ```
 
+The API documentation is available via Swagger UI and can be accessed at the backend base URL:
+
+http://localhost:8080/swagger-ui.html
+
 
 ### Project Status
 
