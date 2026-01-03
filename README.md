@@ -41,7 +41,7 @@ Read the `README.md` files inside the **okanefy_frontend** and **okanefy_api** f
 ```bash
 git clone https://github.com/DanielGomesOtt/okanefy.git
 cd okanefy
-docker-compose up --build
+docker compose up --build
 ```
 Access the application at:
 👉 http://localhost:5173
